@@ -241,7 +241,8 @@
 
     if (expanded) {
       var listWrap = el('div', 'project-tiles');
-      tiles.forEach(function (t) {
+      var unplacedTiles = tiles.filter(function (t) { return !t.status; });
+      unplacedTiles.forEach(function (t) {
         var mt = el('div', 'mini-tile', t.title);
         mt.style.borderLeftColor = p.color;
         mt.setAttribute('draggable', 'true');
@@ -290,7 +291,7 @@
       render();
       return;
     }
-    state.tiles.push({ id: uid('tile'), projectId: projectId, title: text, status: 'todo', subtasks: [] });
+    state.tiles.push({ id: uid('tile'), projectId: projectId, title: text, status: null, subtasks: [] });
     state.addTileDraftProjectId = null;
     state.addTileDraftText = '';
     persist();

@@ -47,6 +47,9 @@
     confirmDeleteProject: null,
     pulseTileId: null,
     draggingTileId: null,
+    renamingTileId: null,
+    renameDraftText: '',
+    archivedOpen: false,
   };
 
   function load() {
@@ -83,12 +86,13 @@
     var accent = (THEMES[state.theme] || THEMES.ink).accent;
     root.style.setProperty('--accent', accent);
 
-    var anyOverlayOpen = state.newProjectOpen || state.settingsOpen;
+    var anyOverlayOpen = state.newProjectOpen || state.settingsOpen || state.archivedOpen;
     if (anyOverlayOpen) {
       var catcher = el('div', 'overlay-catcher');
       catcher.addEventListener('click', function () {
         state.newProjectOpen = false;
         state.settingsOpen = false;
+        state.archivedOpen = false;
         render();
       });
       root.appendChild(catcher);
@@ -128,6 +132,31 @@
       (map[t.projectId] = map[t.projectId] || []).push(t);
     });
     return map;
+  }
+  function isProjectDone(projectId) {
+    var pts = state.tiles.filter(function (t) { return t.projectId === projectId; });
+    return pts.length > 0 && pts.every(function (t) { return t.status === 'done'; });
+  }
+  function archiveProject(projectId) {
+    var p = projectsById()[projectId];
+    if (!p) return;
+    p.archived = true;
+    persist();
+    render();
+  }
+  function unarchiveProject(projectId) {
+    var p = projectsById()[projectId];
+    if (!p) return;
+    p.archived = false;
+    persist();
+    render();
+  }
+  function moveTileToStatusEnd(tileId, status) {
+    var idx = state.tiles.findIndex(function (t) { return t.id === tileId; });
+    if (idx === -1) return;
+    var moved = state.tiles.splice(idx, 1)[0];
+    moved.status = status;
+    state.tiles.push(moved);
   }
 
   /* ---------- Top bar ---------- */
@@ -187,11 +216,12 @@
     list.appendChild(el('div', 'sidebar-heading', 'Projects'));
 
     var tbp = tilesByProject();
+    var visibleProjects = state.projects.filter(function (p) { return !p.archived; });
 
-    if (state.projects.length === 0) {
+    if (visibleProjects.length === 0) {
       list.appendChild(el('div', 'no-projects', 'No projects yet.'));
     } else {
-      state.projects.forEach(function (p) {
+      visibleProjects.forEach(function (p) {
         list.appendChild(buildProjectRow(p, tbp[p.id] || []));
       });
     }
@@ -206,7 +236,8 @@
     var dot = el('span', 'project-dot');
     dot.style.background = p.color;
     row.appendChild(dot);
-    row.appendChild(el('span', 'project-name', p.name));
+    var done = isProjectDone(p.id);
+    row.appendChild(el('span', 'project-name' + (done ? ' done' : ''), p.name));
     row.appendChild(el('span', 'project-count', String(tiles.length)));
 
     var addBtn = el('button', 'icon-btn');
@@ -219,6 +250,15 @@
       render();
     });
     row.appendChild(addBtn);
+
+    var archiveBtn = el('button', 'icon-btn');
+    archiveBtn.title = 'Archive project';
+    archiveBtn.appendChild(icon('archive'));
+    archiveBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      archiveProject(p.id);
+    });
+    row.appendChild(archiveBtn);
 
     var delBtn = el('button', 'icon-btn delete');
     delBtn.appendChild(icon('delete'));
@@ -243,6 +283,28 @@
       var listWrap = el('div', 'project-tiles');
       var unplacedTiles = tiles.filter(function (t) { return !t.status; });
       unplacedTiles.forEach(function (t) {
+        if (state.renamingTileId === t.id) {
+          var renameInput = el('input', 'dark-input mini-tile-rename');
+          renameInput.value = state.renameDraftText;
+          var commitRename = function () {
+            var text = state.renameDraftText.trim();
+            if (text) t.title = text;
+            state.renamingTileId = null;
+            persist();
+            render();
+          };
+          renameInput.addEventListener('input', function (e) { state.renameDraftText = e.target.value; });
+          renameInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') commitRename();
+            if (e.key === 'Escape') { state.renamingTileId = null; render(); }
+          });
+          renameInput.addEventListener('blur', commitRename);
+          listWrap.appendChild(renameInput);
+          setTimeout(function () { renameInput.focus(); renameInput.select(); }, 0);
+          return;
+        }
+
+        var mtRow = el('div', 'mini-tile-row');
         var mt = el('div', 'mini-tile', t.title);
         mt.style.borderLeftColor = p.color;
         mt.setAttribute('draggable', 'true');
@@ -251,16 +313,23 @@
           try { e.dataTransfer.setData('text/plain', t.id); e.dataTransfer.effectAllowed = 'move'; } catch (err) {}
         });
         mt.addEventListener('click', function () {
-          state.pulseTileId = t.id;
+          state.renamingTileId = t.id;
+          state.renameDraftText = t.title;
           render();
-          setTimeout(function () {
-            if (state.pulseTileId === t.id) {
-              state.pulseTileId = null;
-              render();
-            }
-          }, 900);
         });
-        listWrap.appendChild(mt);
+        mtRow.appendChild(mt);
+
+        var mtDel = el('button', 'icon-btn delete mini-tile-delete');
+        mtDel.appendChild(icon('delete'));
+        mtDel.addEventListener('click', function (e) {
+          e.stopPropagation();
+          state.tiles = state.tiles.filter(function (x) { return x.id !== t.id; });
+          persist();
+          render();
+        });
+        mtRow.appendChild(mtDel);
+
+        listWrap.appendChild(mtRow);
       });
 
       if (state.addTileDraftProjectId === p.id) {
@@ -300,6 +369,7 @@
 
   function buildSidebarBottom() {
     var bottom = el('div', 'sidebar-bottom');
+    var row = el('div', 'sidebar-bottom-row');
     var btn = el('button', 'settings-btn');
     btn.appendChild(icon('settings'));
     btn.appendChild(el('span', null, 'Settings'));
@@ -307,9 +377,45 @@
       e.stopPropagation();
       state.settingsOpen = !state.settingsOpen;
       state.newProjectOpen = false;
+      state.archivedOpen = false;
       render();
     });
-    bottom.appendChild(btn);
+    row.appendChild(btn);
+
+    var archivedBtn = el('button', 'archived-btn', 'Archived');
+    archivedBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      state.archivedOpen = !state.archivedOpen;
+      state.settingsOpen = false;
+      render();
+    });
+    row.appendChild(archivedBtn);
+    bottom.appendChild(row);
+
+    if (state.archivedOpen) {
+      var archPop = el('div', 'settings-popover');
+      archPop.addEventListener('click', function (e) { e.stopPropagation(); });
+      archPop.appendChild(el('div', 'settings-label', 'Archived Projects'));
+      var archivedProjects = state.projects.filter(function (p) { return p.archived; });
+      if (archivedProjects.length === 0) {
+        archPop.appendChild(el('div', 'no-projects', 'No archived projects.'));
+      } else {
+        var archList = el('div', 'archived-list');
+        archivedProjects.forEach(function (p) {
+          var arow = el('div', 'archived-row');
+          var adot = el('span', 'project-dot');
+          adot.style.background = p.color;
+          arow.appendChild(adot);
+          arow.appendChild(el('span', 'project-name', p.name));
+          var unarchiveBtn = el('button', 'unarchive-btn', 'Unarchive');
+          unarchiveBtn.addEventListener('click', function () { unarchiveProject(p.id); });
+          arow.appendChild(unarchiveBtn);
+          archList.appendChild(arow);
+        });
+        archPop.appendChild(archList);
+      }
+      bottom.appendChild(archPop);
+    }
 
     if (state.settingsOpen) {
       var pop = el('div', 'settings-popover');
@@ -359,8 +465,14 @@
   }
 
   function buildColumn(col, accent) {
-    var colTiles = state.tiles.filter(function (t) { return t.status === col.key; });
+    var pbid = projectsById();
+    var visibleTiles = state.tiles.filter(function (t) {
+      var p = pbid[t.projectId];
+      return p && !p.archived;
+    });
+    var colTiles = visibleTiles.filter(function (t) { return t.status === col.key; });
     var column = el('div', 'column');
+    column.addEventListener('dragenter', function (e) { e.preventDefault(); });
     column.addEventListener('dragover', function (e) { e.preventDefault(); column.classList.add('drag-over'); });
     column.addEventListener('dragleave', function () { column.classList.remove('drag-over'); });
     column.addEventListener('drop', function (e) {
@@ -368,9 +480,7 @@
       column.classList.remove('drag-over');
       var tileId = state.draggingTileId;
       if (!tileId) return;
-      state.tiles = state.tiles.map(function (t) {
-        return t.id === tileId ? Object.assign({}, t, { status: col.key }) : t;
-      });
+      moveTileToStatusEnd(tileId, col.key);
       state.draggingTileId = null;
       persist();
       render();
@@ -384,14 +494,54 @@
     var body = el('div', 'column-body');
     if (colTiles.length === 0) {
       body.appendChild(el('div', 'empty-col', 'Empty'));
+    } else if (col.key === 'done') {
+      renderCompletedTiles(body, colTiles, pbid);
     } else {
-      var pbid = projectsById();
       colTiles.forEach(function (t) {
         body.appendChild(buildTile(t, pbid[t.projectId] || { color: '#75798c' }));
       });
     }
     column.appendChild(body);
     return column;
+  }
+
+  function renderCompletedTiles(body, colTiles, pbid) {
+    var emittedProjects = {};
+    colTiles.forEach(function (t) {
+      var project = pbid[t.projectId] || { color: '#75798c' };
+      if (isProjectDone(t.projectId)) {
+        if (emittedProjects[t.projectId]) return;
+        emittedProjects[t.projectId] = true;
+        body.appendChild(buildCompletedGroup(project, colTiles.filter(function (x) { return x.projectId === t.projectId; })));
+      } else {
+        body.appendChild(buildTile(t, project));
+      }
+    });
+  }
+
+  function buildCompletedGroup(project, groupTiles) {
+    var group = el('div', 'completed-group');
+    var header = el('div', 'completed-group-header');
+    var dot = el('span', 'project-dot');
+    dot.style.background = project.color;
+    header.appendChild(dot);
+    header.appendChild(el('span', 'completed-group-name', project.name));
+    var archiveBtn = el('button', 'icon-btn');
+    archiveBtn.title = 'Archive project';
+    archiveBtn.appendChild(icon('archive'));
+    archiveBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      archiveProject(project.id);
+    });
+    header.appendChild(archiveBtn);
+    group.appendChild(header);
+
+    var groupBody = el('div', 'completed-group-tiles');
+    groupTiles.forEach(function (t) {
+      groupBody.appendChild(buildTile(t, project));
+    });
+    group.appendChild(groupBody);
+    return group;
   }
 
   function buildTile(t, project) {
@@ -411,6 +561,7 @@
       state.draggingTileId = null;
       render();
     });
+    tile.addEventListener('dragenter', function (e) { e.preventDefault(); e.stopPropagation(); });
     tile.addEventListener('dragover', function (e) { e.preventDefault(); e.stopPropagation(); });
     tile.addEventListener('drop', function (e) {
       e.preventDefault();
@@ -420,7 +571,7 @@
 
     var head = el('div', 'tile-head');
     var titleWrap = el('div', 'tile-title-wrap');
-    titleWrap.appendChild(el('div', 'tile-title', t.title));
+    titleWrap.appendChild(el('div', 'tile-title' + (t.status === 'done' ? ' done' : ''), t.title));
     if (total > 0) {
       var progRow = el('div', 'tile-progress-row');
       var track = el('div', 'tile-progress-track');

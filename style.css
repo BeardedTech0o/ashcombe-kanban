@@ -187,6 +187,10 @@ input, textarea { font-family: inherit; }
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.project-name.done {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
 .project-count {
   font-family: 'Space Mono', monospace;
   font-size: 10px;
@@ -231,6 +235,18 @@ input, textarea { font-family: inherit; }
   text-overflow: ellipsis;
 }
 .mini-tile:hover { background: rgba(233,232,237,0.05); opacity: 1; }
+.mini-tile-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.mini-tile-row .mini-tile { flex: 1; }
+.mini-tile-delete { flex: none; opacity: 0.25; }
+.mini-tile-row:hover .mini-tile-delete { opacity: 0.6; }
+.mini-tile-delete:hover { color: #c17a6c; }
+.mini-tile-rename {
+  margin: 0 0 0 0;
+}
 
 .dark-input {
   background: #232532;
@@ -252,11 +268,17 @@ input, textarea { font-family: inherit; }
   padding: 14px;
   position: relative;
 }
+.sidebar-bottom-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 .settings-btn {
   display: flex;
   align-items: center;
   gap: 10px;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   padding: 9px 10px;
   border-radius: 8px;
   border: none;
@@ -268,6 +290,40 @@ input, textarea { font-family: inherit; }
 }
 .settings-btn:hover { background: rgba(233,232,237,0.06); }
 .settings-btn .msi { font-size: 19px; opacity: 0.7; }
+.archived-btn {
+  flex: none;
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #eae8ea;
+  font-family: 'EB Garamond', serif;
+  font-size: 13px;
+  opacity: 0.6;
+  cursor: pointer;
+}
+.archived-btn:hover { opacity: 1; background: rgba(233,232,237,0.06); }
+
+.archived-list { display: flex; flex-direction: column; gap: 2px; max-height: 240px; overflow-y: auto; }
+.archived-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 4px;
+}
+.archived-row .project-name { font-size: 14px; }
+.unarchive-btn {
+  flex: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(233,232,237,0.16);
+  background: transparent;
+  color: #eae8ea;
+  font-size: 11px;
+  cursor: pointer;
+  opacity: 0.75;
+}
+.unarchive-btn:hover { opacity: 1; }
 
 .settings-popover {
   position: absolute;
@@ -359,6 +415,32 @@ input, textarea { font-family: inherit; }
   flex-direction: column;
   gap: 10px;
 }
+.completed-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.completed-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 2px;
+}
+.completed-group-name {
+  flex: 1;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: line-through;
+  opacity: 0.65;
+}
+.completed-group-tiles {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 10px;
+  border-left: 1px dashed rgba(233,232,237,0.15);
+}
 .empty-col {
   padding: 30px 6px;
   text-align: center;
@@ -389,6 +471,10 @@ input, textarea { font-family: inherit; }
   font-size: 17px;
   font-weight: 600;
   line-height: 1.25;
+}
+.tile-title.done {
+  text-decoration: line-through;
+  opacity: 0.6;
 }
 .tile-progress-row {
   display: flex;

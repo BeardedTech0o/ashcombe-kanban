@@ -47,6 +47,7 @@
     confirmDeleteProject: null,
     pulseTileId: null,
     draggingTileId: null,
+    draggingProjectId: null,
     renamingTileId: null,
     renameDraftText: '',
     archivedOpen: false,
@@ -233,6 +234,41 @@
   function buildProjectRow(p, tiles) {
     var wrap = el('div');
     var row = el('div', 'project-row');
+    row.setAttribute('draggable', 'true');
+    row.addEventListener('dragstart', function (e) {
+      state.draggingProjectId = p.id;
+      state.draggingTileId = null;
+      try { e.dataTransfer.setData('text/plain', 'project:' + p.id); e.dataTransfer.effectAllowed = 'move'; } catch (err) {}
+    });
+    row.addEventListener('dragend', function () {
+      state.draggingProjectId = null;
+      render();
+    });
+    row.addEventListener('dragenter', function (e) { e.preventDefault(); e.stopPropagation(); });
+    row.addEventListener('dragover', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (state.draggingTileId) row.classList.add('drag-target');
+    });
+    row.addEventListener('dragleave', function () { row.classList.remove('drag-target'); });
+    row.addEventListener('drop', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      row.classList.remove('drag-target');
+      var tileId = state.draggingTileId;
+      if (!tileId) return;
+      var idx = state.tiles.findIndex(function (t) { return t.id === tileId; });
+      if (idx === -1) return;
+      var moved = state.tiles.splice(idx, 1)[0];
+      moved.projectId = p.id;
+      moved.status = null;
+      state.tiles.push(moved);
+      state.draggingTileId = null;
+      state.expandedProjects[p.id] = true;
+      persist();
+      render();
+    });
+
     var dot = el('span', 'project-dot');
     dot.style.background = p.color;
     row.appendChild(dot);
@@ -305,8 +341,11 @@
         }
 
         var mtRow = el('div', 'mini-tile-row');
-        var mt = el('div', 'mini-tile', t.title);
-        mt.style.borderLeftColor = p.color;
+        var mt = el('div', 'mini-tile');
+        var mtDot = el('span', 'mini-tile-dot');
+        mtDot.style.background = p.color;
+        mt.appendChild(mtDot);
+        mt.appendChild(el('span', 'mini-tile-text', t.title));
         mt.setAttribute('draggable', 'true');
         mt.addEventListener('dragstart', function (e) {
           state.draggingTileId = t.id;
@@ -478,6 +517,17 @@
     column.addEventListener('drop', function (e) {
       e.preventDefault();
       column.classList.remove('drag-over');
+      if (state.draggingProjectId) {
+        var pid = state.draggingProjectId;
+        var projTiles = state.tiles.filter(function (t) { return t.projectId === pid; });
+        var others = state.tiles.filter(function (t) { return t.projectId !== pid; });
+        projTiles.forEach(function (t) { t.status = col.key; });
+        state.tiles = others.concat(projTiles);
+        state.draggingProjectId = null;
+        persist();
+        render();
+        return;
+      }
       var tileId = state.draggingTileId;
       if (!tileId) return;
       moveTileToStatusEnd(tileId, col.key);
@@ -520,25 +570,53 @@
   }
 
   function buildCompletedGroup(project, groupTiles) {
-    var group = el('div', 'completed-group');
-    var header = el('div', 'completed-group-header');
-    var dot = el('span', 'project-dot');
+    var group = el('div', 'tile completed-group');
+
+    var head = el('div', 'tile-head');
+    var titleWrap = el('div', 'tile-title-wrap');
+    var dot = el('span', 'tile-dot');
     dot.style.background = project.color;
-    header.appendChild(dot);
-    header.appendChild(el('span', 'completed-group-name', project.name));
-    var archiveBtn = el('button', 'icon-btn');
+    titleWrap.appendChild(dot);
+    var titleCol = el('div', 'tile-title-col');
+    titleCol.appendChild(el('div', 'tile-title done', project.name));
+    titleCol.appendChild(el('div', 'completed-group-sub', groupTiles.length + ' completed'));
+    titleWrap.appendChild(titleCol);
+    head.appendChild(titleWrap);
+
+    var archiveBtn = el('button', 'tile-edit');
     archiveBtn.title = 'Archive project';
     archiveBtn.appendChild(icon('archive'));
     archiveBtn.addEventListener('click', function (e) {
       e.stopPropagation();
       archiveProject(project.id);
     });
-    header.appendChild(archiveBtn);
-    group.appendChild(header);
+    head.appendChild(archiveBtn);
+    group.appendChild(head);
 
     var groupBody = el('div', 'completed-group-tiles');
     groupTiles.forEach(function (t) {
-      groupBody.appendChild(buildTile(t, project));
+      var row = el('div', 'completed-group-row');
+      row.setAttribute('draggable', 'true');
+      row.addEventListener('dragstart', function (e) {
+        state.draggingTileId = t.id;
+        try { e.dataTransfer.setData('text/plain', t.id); e.dataTransfer.effectAllowed = 'move'; } catch (err) {}
+      });
+      row.addEventListener('dragend', function () {
+        state.draggingTileId = null;
+        render();
+      });
+      row.appendChild(icon('drag_indicator', 'drag-indicator'));
+      row.appendChild(el('span', 'completed-group-row-text', t.title));
+      var delBtn = el('button', 'tile-delete');
+      delBtn.appendChild(icon('close'));
+      delBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        state.tiles = state.tiles.filter(function (x) { return x.id !== t.id; });
+        persist();
+        render();
+      });
+      row.appendChild(delBtn);
+      groupBody.appendChild(row);
     });
     group.appendChild(groupBody);
     return group;
@@ -550,7 +628,6 @@
     var expanded = !!state.expandedTiles[t.id];
 
     var tile = el('div', 'tile' + (state.pulseTileId === t.id ? ' tile-pulse' : ''));
-    tile.style.borderLeftColor = project.color;
     tile.setAttribute('draggable', 'true');
 
     tile.addEventListener('dragstart', function (e) {
@@ -571,23 +648,67 @@
 
     var head = el('div', 'tile-head');
     var titleWrap = el('div', 'tile-title-wrap');
-    titleWrap.appendChild(el('div', 'tile-title' + (t.status === 'done' ? ' done' : ''), t.title));
-    if (total > 0) {
-      var progRow = el('div', 'tile-progress-row');
-      var track = el('div', 'tile-progress-track');
-      var fill = el('div', 'tile-progress-fill');
-      fill.style.width = Math.round((done / total) * 100) + '%';
-      fill.style.background = project.color;
-      track.appendChild(fill);
-      progRow.appendChild(track);
-      progRow.appendChild(el('span', 'tile-progress-label', done + '/' + total));
-      titleWrap.appendChild(progRow);
+    var tDot = el('span', 'tile-dot');
+    tDot.style.background = project.color;
+    titleWrap.appendChild(tDot);
+    var titleCol = el('div', 'tile-title-col');
+
+    if (state.renamingTileId === t.id) {
+      var renameInput = el('input', 'dark-input tile-rename-input');
+      renameInput.value = state.renameDraftText;
+      var commitTileRename = function () {
+        var text = state.renameDraftText.trim();
+        if (text) t.title = text;
+        state.renamingTileId = null;
+        persist();
+        render();
+      };
+      renameInput.addEventListener('click', function (e) { e.stopPropagation(); });
+      renameInput.addEventListener('input', function (e) { state.renameDraftText = e.target.value; });
+      renameInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') commitTileRename();
+        if (e.key === 'Escape') { state.renamingTileId = null; render(); }
+      });
+      renameInput.addEventListener('blur', commitTileRename);
+      titleCol.appendChild(renameInput);
+      setTimeout(function () { renameInput.focus(); renameInput.select(); }, 0);
+    } else {
+      titleCol.appendChild(el('div', 'tile-title' + (t.status === 'done' ? ' done' : ''), t.title));
+      if (total > 0) {
+        var progRow = el('div', 'tile-progress-row');
+        var track = el('div', 'tile-progress-track');
+        var fill = el('div', 'tile-progress-fill');
+        fill.style.width = Math.round((done / total) * 100) + '%';
+        fill.style.background = project.color;
+        track.appendChild(fill);
+        progRow.appendChild(track);
+        progRow.appendChild(el('span', 'tile-progress-label', done + '/' + total));
+        titleCol.appendChild(progRow);
+      }
+      titleWrap.addEventListener('click', function () {
+        state.expandedTiles[t.id] = !state.expandedTiles[t.id];
+        render();
+      });
+      titleWrap.addEventListener('dblclick', function (e) {
+        e.stopPropagation();
+        state.renamingTileId = t.id;
+        state.renameDraftText = t.title;
+        render();
+      });
     }
-    titleWrap.addEventListener('click', function () {
-      state.expandedTiles[t.id] = !state.expandedTiles[t.id];
+    titleWrap.appendChild(titleCol);
+    head.appendChild(titleWrap);
+
+    var editBtn = el('button', 'tile-edit');
+    editBtn.title = 'Rename';
+    editBtn.appendChild(icon('edit'));
+    editBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      state.renamingTileId = t.id;
+      state.renameDraftText = t.title;
       render();
     });
-    head.appendChild(titleWrap);
+    head.appendChild(editBtn);
     head.appendChild(icon('drag_indicator', 'drag-indicator'));
 
     var delBtn = el('button', 'tile-delete');

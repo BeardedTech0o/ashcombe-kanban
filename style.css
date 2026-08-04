@@ -182,6 +182,7 @@ input, textarea { font-family: inherit; }
 }
 .project-name {
   flex: 1;
+  min-width: 30px;
   font-family: 'EB Garamond', serif;
   font-size: 15px;
   overflow: hidden;
@@ -274,6 +275,13 @@ input, textarea { font-family: inherit; }
   width: 100%;
 }
 .add-tile-input { margin-top: 2px; }
+.project-rename-input {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  padding: 4px 6px;
+  font-size: 15px;
+}
 
 /* Settings */
 .sidebar-bottom {

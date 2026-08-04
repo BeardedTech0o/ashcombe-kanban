@@ -50,6 +50,8 @@
     draggingProjectId: null,
     renamingTileId: null,
     renameDraftText: '',
+    renamingProjectId: null,
+    renameProjectDraftText: '',
     archivedOpen: false,
   };
 
@@ -273,7 +275,36 @@
     dot.style.background = p.color;
     row.appendChild(dot);
     var done = isProjectDone(p.id);
-    row.appendChild(el('span', 'project-name' + (done ? ' done' : ''), p.name));
+
+    if (state.renamingProjectId === p.id) {
+      var renameInput = el('input', 'dark-input project-rename-input');
+      renameInput.value = state.renameProjectDraftText;
+      var commitProjectRename = function () {
+        var text = state.renameProjectDraftText.trim();
+        if (text) p.name = text;
+        state.renamingProjectId = null;
+        persist();
+        render();
+      };
+      renameInput.addEventListener('click', function (e) { e.stopPropagation(); });
+      renameInput.addEventListener('input', function (e) { state.renameProjectDraftText = e.target.value; });
+      renameInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') commitProjectRename();
+        if (e.key === 'Escape') { state.renamingProjectId = null; render(); }
+      });
+      renameInput.addEventListener('blur', commitProjectRename);
+      row.appendChild(renameInput);
+      setTimeout(function () { renameInput.focus(); renameInput.select(); }, 0);
+    } else {
+      var nameSpan = el('span', 'project-name' + (done ? ' done' : ''), p.name);
+      nameSpan.addEventListener('dblclick', function (e) {
+        e.stopPropagation();
+        state.renamingProjectId = p.id;
+        state.renameProjectDraftText = p.name;
+        render();
+      });
+      row.appendChild(nameSpan);
+    }
     row.appendChild(el('span', 'project-count', String(tiles.length)));
 
     var addBtn = el('button', 'icon-btn');

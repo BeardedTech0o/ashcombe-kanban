@@ -685,6 +685,7 @@
     var titleCol = el('div', 'tile-title-col');
 
     if (state.renamingTileId === t.id) {
+      if (project.name) titleCol.appendChild(el('div', 'tile-project-label', project.name));
       var renameInput = el('input', 'dark-input tile-rename-input');
       renameInput.value = state.renameDraftText;
       var commitTileRename = function () {
@@ -704,6 +705,7 @@
       titleCol.appendChild(renameInput);
       setTimeout(function () { renameInput.focus(); renameInput.select(); }, 0);
     } else {
+      if (project.name) titleCol.appendChild(el('div', 'tile-project-label', project.name));
       titleCol.appendChild(el('div', 'tile-title' + (t.status === 'done' ? ' done' : ''), t.title));
       if (total > 0) {
         var progRow = el('div', 'tile-progress-row');

@@ -518,6 +518,14 @@ input, textarea { font-family: inherit; }
   margin-top: 6px;
 }
 .tile-title-col { flex: 1; min-width: 0; }
+.tile-project-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.4;
+  margin-bottom: 3px;
+}
 .tile-title {
   font-family: 'Cormorant Garamond', serif;
   font-size: 17px;

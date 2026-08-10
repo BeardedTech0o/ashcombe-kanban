@@ -17,9 +17,13 @@ cd ashcombe-kanban
 2. Click **Code → Download ZIP**.
 3. Unzip it anywhere on your computer.
 
+**Option C — single file, no folder:**
+
+If you'd rather keep just one file on your desktop instead of a folder of three, download [`ashcombe-kanban.single.html`](ashcombe-kanban.single.html) from the repo (open it and click **Download raw file**) and open that directly. It's the same app with the CSS and JS bundled inline.
+
 ## Running it
 
-The app is three static files (`index.html`, `app.js`, `style.css`) with no dependencies to install. Just serve the folder and open it in a browser — opening `index.html` directly via `file://` also works, but a local server avoids any browser restrictions.
+The app is three static files (`index.html`, `app.js`, `style.css`) with no dependencies to install — or one bundled file (`ashcombe-kanban.single.html`, see Option C above). Just serve the folder and open it in a browser — opening `index.html` (or the single-file bundle) directly via `file://` also works, but a local server avoids any browser restrictions.
 
 **Using Python (already installed on most systems):**
 
@@ -50,6 +54,14 @@ Double-click `index.html`, or open it from your browser with `File → Open`.
 - **Archive / delete** — use the icons on a project row to archive or delete it; archived projects are hidden from the sidebar but reachable from the **Archived** button at the bottom.
 - **Themes** — open **Settings** to switch the accent color theme.
 - **Data storage** — everything (projects, tiles, templates, theme) is saved to your browser's `localStorage`. Clearing your browser data or using a different browser/device will not carry your board over. Use **Settings → Clear Board** to reset projects and tiles while keeping templates and theme.
+
+## Updating to a new version
+
+Your board data is saved in your browser's `localStorage`, keyed to the exact URL/file path you open the app from — not stored inside the files themselves. To update:
+
+- **Git clone / folder setup:** `git pull`, then reload the page from the same URL/path you've been using. Data carries over automatically since the origin doesn't change.
+- **Single-file bundle:** download the latest `ashcombe-kanban.single.html` and **save it over the same file path and filename** you're already using. If you save it to a new location, some browsers treat that as a different origin and won't show your existing board — in that case, copy the `ashcombe-kanban-v1` entry from DevTools → Application → Local Storage on the old file before switching, and paste it in at the new one.
+- To regenerate the single-file bundle yourself from the source files, run `node build-single-file.js` (requires Node.js) — this produces `ashcombe-kanban.single.html`.
 
 ## Browser support
 

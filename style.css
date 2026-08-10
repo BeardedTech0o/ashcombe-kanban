@@ -244,6 +244,12 @@ input, textarea { font-family: inherit; }
   border-radius: 50%;
   flex: none;
 }
+.mini-tile-number {
+  flex: none;
+  opacity: 0.5;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+}
 .mini-tile-text {
   overflow: hidden;
   text-overflow: ellipsis;

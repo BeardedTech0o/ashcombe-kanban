@@ -376,6 +376,8 @@
         var mtDot = el('span', 'mini-tile-dot');
         mtDot.style.background = p.color;
         mt.appendChild(mtDot);
+        var num = tiles.indexOf(t) + 1;
+        mt.appendChild(el('span', 'mini-tile-number', num + '.'));
         mt.appendChild(el('span', 'mini-tile-text', t.title));
         mt.setAttribute('draggable', 'true');
         mt.addEventListener('dragstart', function (e) {
@@ -928,7 +930,7 @@
       if (tpl) {
         tpl.tiles.forEach(function (row) {
           newTiles.push({
-            id: uid('tile'), projectId: projectId, title: row.title, status: 'todo',
+            id: uid('tile'), projectId: projectId, title: row.title, status: null,
             subtasks: row.subtasks.map(function (txt) { return { id: uid('sub'), text: txt, done: false }; }),
           });
         });

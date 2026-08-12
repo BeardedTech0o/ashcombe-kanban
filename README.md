@@ -44,12 +44,20 @@ Double-click `index.html`, or open it from your browser with `File → Open`.
 - **Create a project** — click **New Project** in the top bar, then choose **Blank Project** or **Choose From Template**.
 - **Templates** — pick an existing template to prefill a project with tiles and subtasks, or click **Add Template** to define your own (one tile title + a list of subtasks per line).
 - **Tiles start unplaced** — every tile you create (blank or from a template) lands in the project's list in the sidebar, numbered in order. Nothing is added to a board column automatically.
-- **Move a tile onto the board** — drag a tile from the sidebar onto a column (**To Do**, **In Progress**, **Awaiting Sign-Off**, **Completed**) when you're ready to work on it. Tiles moved onto the board show which project they belong to.
+- **Move a tile onto the board** — drag a tile from the sidebar onto a column (**To Do**, **In Progress**, **Awaiting Sign-Off**, **Completed**) when you're ready to work on it. Tiles moved onto the board show which project they belong to, along with their tile number.
 - **Subtasks** — expand a tile on the board to check off subtasks and track progress.
 - **Rename** — double-click a project or tile name to rename it inline.
 - **Archive / delete** — use the icons on a project row to archive or delete it; archived projects are hidden from the sidebar but reachable from the **Archived** button at the bottom.
 - **Themes** — open **Settings** to switch the accent color theme.
-- **Data storage** — everything (projects, tiles, templates, theme) is saved to your browser's `localStorage`. Clearing your browser data or using a different browser/device will not carry your board over. Use **Settings → Clear Board** to reset projects and tiles while keeping templates and theme.
+- **Font size** — open **Settings** and pick X-Small, Small, Medium, Large, or X-Large to scale text across the whole app.
+- **Data storage** — everything (projects, tiles, templates, theme, font size) is saved to your browser's `localStorage`. Clearing your browser data or using a different browser/device will not carry your board over. Use **Settings → Clear Board** to reset projects and tiles while keeping templates and theme.
+
+## Mobile / portrait use
+
+On narrower screens (phones, portrait tablets) the layout adapts automatically:
+
+- The sidebar collapses behind a menu button in the top bar and slides in as an overlay when tapped.
+- Board columns become full-width and swipeable — swipe left/right to move between **To Do**, **In Progress**, **Awaiting Sign-Off**, and **Completed**.
 
 ## Browser support
 

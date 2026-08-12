@@ -15,6 +15,13 @@
   };
   var PROJECT_COLORS = ['#9c5a52', '#5f7a5a', '#5d6f96', '#7c6091', '#b08a4e', '#4f8585'];
   var STORAGE_KEY = 'ashcombe-kanban-v1';
+  var FONT_SIZES = [
+    { key: 'xsmall', label: 'X-Small' },
+    { key: 'small', label: 'Small' },
+    { key: 'medium', label: 'Medium' },
+    { key: 'large', label: 'Large' },
+    { key: 'xlarge', label: 'X-Large' },
+  ];
 
   function uid(prefix) {
     return (prefix || 'id') + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -33,6 +40,7 @@
     tiles: [],
     templates: [],
     theme: 'ink',
+    fontSize: 'medium',
     expandedProjects: {},
     expandedTiles: {},
     newProjectOpen: false,
@@ -53,6 +61,7 @@
     renamingProjectId: null,
     renameProjectDraftText: '',
     archivedOpen: false,
+    mobileSidebarOpen: false,
   };
 
   function load() {
@@ -64,6 +73,7 @@
         state.tiles = data.tiles || [];
         state.templates = (data.templates && data.templates.length) ? data.templates : seedTemplates();
         state.theme = data.theme || 'ink';
+        state.fontSize = data.fontSize || 'medium';
       } else {
         state.templates = seedTemplates();
       }
@@ -79,6 +89,7 @@
         tiles: state.tiles,
         templates: state.templates,
         theme: state.theme,
+        fontSize: state.fontSize,
       }));
     } catch (e) {}
   }
@@ -88,14 +99,16 @@
     root.innerHTML = '';
     var accent = (THEMES[state.theme] || THEMES.ink).accent;
     root.style.setProperty('--accent', accent);
+    document.documentElement.setAttribute('data-fontsize', state.fontSize);
 
-    var anyOverlayOpen = state.newProjectOpen || state.settingsOpen || state.archivedOpen;
+    var anyOverlayOpen = state.newProjectOpen || state.settingsOpen || state.archivedOpen || state.mobileSidebarOpen;
     if (anyOverlayOpen) {
-      var catcher = el('div', 'overlay-catcher');
+      var catcher = el('div', 'overlay-catcher' + (state.mobileSidebarOpen ? ' dim' : ''));
       catcher.addEventListener('click', function () {
         state.newProjectOpen = false;
         state.settingsOpen = false;
         state.archivedOpen = false;
+        state.mobileSidebarOpen = false;
         render();
       });
       root.appendChild(catcher);
@@ -140,6 +153,11 @@
     var pts = state.tiles.filter(function (t) { return t.projectId === projectId; });
     return pts.length > 0 && pts.every(function (t) { return t.status === 'done'; });
   }
+  function tileNumber(t) {
+    var arr = tilesByProject()[t.projectId] || [];
+    var idx = arr.indexOf(t);
+    return idx === -1 ? null : idx + 1;
+  }
   function archiveProject(projectId) {
     var p = projectsById()[projectId];
     if (!p) return;
@@ -166,6 +184,20 @@
   function buildTopbar(accent) {
     var bar = el('div', 'topbar');
     var left = el('div', 'topbar-left');
+
+    var hamburger = el('button', 'hamburger-btn');
+    hamburger.appendChild(icon('menu'));
+    hamburger.title = 'Toggle projects';
+    hamburger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      state.mobileSidebarOpen = !state.mobileSidebarOpen;
+      state.newProjectOpen = false;
+      state.settingsOpen = false;
+      state.archivedOpen = false;
+      render();
+    });
+    left.appendChild(hamburger);
+
     left.appendChild(el('h1', 'app-title', 'Ashcombe Board'));
 
     var wrap = el('div', 'new-project-wrap');
@@ -214,7 +246,7 @@
 
   /* ---------- Sidebar ---------- */
   function buildSidebar(accent) {
-    var sidebar = el('div', 'sidebar');
+    var sidebar = el('div', 'sidebar' + (state.mobileSidebarOpen ? ' mobile-open' : ''));
     var list = el('div', 'sidebar-list');
     list.appendChild(el('div', 'sidebar-heading', 'Projects'));
 
@@ -234,29 +266,28 @@
   }
 
   function buildProjectRow(p, tiles) {
-    var wrap = el('div');
-    var row = el('div', 'project-row');
-    row.setAttribute('draggable', 'true');
-    row.addEventListener('dragstart', function (e) {
+    var card = el('div', 'project-card');
+    card.setAttribute('draggable', 'true');
+    card.addEventListener('dragstart', function (e) {
       state.draggingProjectId = p.id;
       state.draggingTileId = null;
       try { e.dataTransfer.setData('text/plain', 'project:' + p.id); e.dataTransfer.effectAllowed = 'move'; } catch (err) {}
     });
-    row.addEventListener('dragend', function () {
+    card.addEventListener('dragend', function () {
       state.draggingProjectId = null;
       render();
     });
-    row.addEventListener('dragenter', function (e) { e.preventDefault(); e.stopPropagation(); });
-    row.addEventListener('dragover', function (e) {
+    card.addEventListener('dragenter', function (e) { e.preventDefault(); e.stopPropagation(); });
+    card.addEventListener('dragover', function (e) {
       e.preventDefault();
       e.stopPropagation();
-      if (state.draggingTileId) row.classList.add('drag-target');
+      if (state.draggingTileId) card.classList.add('drag-target');
     });
-    row.addEventListener('dragleave', function () { row.classList.remove('drag-target'); });
-    row.addEventListener('drop', function (e) {
+    card.addEventListener('dragleave', function () { card.classList.remove('drag-target'); });
+    card.addEventListener('drop', function (e) {
       e.preventDefault();
       e.stopPropagation();
-      row.classList.remove('drag-target');
+      card.classList.remove('drag-target');
       var tileId = state.draggingTileId;
       if (!tileId) return;
       var idx = state.tiles.findIndex(function (t) { return t.id === tileId; });
@@ -271,10 +302,13 @@
       render();
     });
 
+    var done = isProjectDone(p.id);
+    var expanded = !!state.expandedProjects[p.id];
+
+    var topRow = el('div', 'project-row-top');
     var dot = el('span', 'project-dot');
     dot.style.background = p.color;
-    row.appendChild(dot);
-    var done = isProjectDone(p.id);
+    topRow.appendChild(dot);
 
     if (state.renamingProjectId === p.id) {
       var renameInput = el('input', 'dark-input project-rename-input');
@@ -293,7 +327,7 @@
         if (e.key === 'Escape') { state.renamingProjectId = null; render(); }
       });
       renameInput.addEventListener('blur', commitProjectRename);
-      row.appendChild(renameInput);
+      topRow.appendChild(renameInput);
       setTimeout(function () { renameInput.focus(); renameInput.select(); }, 0);
     } else {
       var nameSpan = el('span', 'project-name' + (done ? ' done' : ''), p.name);
@@ -303,9 +337,20 @@
         state.renameProjectDraftText = p.name;
         render();
       });
-      row.appendChild(nameSpan);
+      topRow.appendChild(nameSpan);
     }
-    row.appendChild(el('span', 'project-count', String(tiles.length)));
+
+    var chev = icon('chevron_right', 'chevron' + (expanded ? ' expanded' : ''));
+    topRow.appendChild(chev);
+    topRow.addEventListener('click', function () {
+      state.expandedProjects[p.id] = !state.expandedProjects[p.id];
+      render();
+    });
+    card.appendChild(topRow);
+
+    var bottomRow = el('div', 'project-row-bottom');
+    bottomRow.appendChild(el('span', 'project-count', String(tiles.length)));
+    bottomRow.appendChild(el('span', 'project-row-spacer'));
 
     var addBtn = el('button', 'icon-btn');
     addBtn.appendChild(icon('add'));
@@ -316,7 +361,7 @@
       state.expandedProjects[p.id] = true;
       render();
     });
-    row.appendChild(addBtn);
+    bottomRow.appendChild(addBtn);
 
     var archiveBtn = el('button', 'icon-btn');
     archiveBtn.title = 'Archive project';
@@ -325,7 +370,7 @@
       e.stopPropagation();
       archiveProject(p.id);
     });
-    row.appendChild(archiveBtn);
+    bottomRow.appendChild(archiveBtn);
 
     var delBtn = el('button', 'icon-btn delete');
     delBtn.appendChild(icon('delete'));
@@ -334,17 +379,8 @@
       state.confirmDeleteProject = p.id;
       render();
     });
-    row.appendChild(delBtn);
-
-    var expanded = !!state.expandedProjects[p.id];
-    var chev = icon('chevron_right', 'chevron' + (expanded ? ' expanded' : ''));
-    row.appendChild(chev);
-
-    row.addEventListener('click', function () {
-      state.expandedProjects[p.id] = !state.expandedProjects[p.id];
-      render();
-    });
-    wrap.appendChild(row);
+    bottomRow.appendChild(delBtn);
+    card.appendChild(bottomRow);
 
     if (expanded) {
       var listWrap = el('div', 'project-tiles');
@@ -417,9 +453,9 @@
         listWrap.appendChild(input);
         setTimeout(function () { input.focus(); }, 0);
       }
-      wrap.appendChild(listWrap);
+      card.appendChild(listWrap);
     }
-    return wrap;
+    return card;
   }
 
   function commitAddTileDraft() {
@@ -510,6 +546,19 @@
         row.appendChild(swatch);
       });
       pop.appendChild(row);
+
+      pop.appendChild(el('div', 'settings-label', 'Font Size'));
+      var sizeRow = el('div', 'fontsize-row');
+      FONT_SIZES.forEach(function (fs) {
+        var sizeBtn = el('button', 'fontsize-btn' + (state.fontSize === fs.key ? ' active' : ''), fs.label);
+        sizeBtn.addEventListener('click', function () {
+          state.fontSize = fs.key;
+          persist();
+          render();
+        });
+        sizeRow.appendChild(sizeBtn);
+      });
+      pop.appendChild(sizeRow);
 
       var clearBtn = el('button', 'clear-board-btn', 'Clear Board');
       clearBtn.addEventListener('click', function () {
@@ -639,6 +688,8 @@
         render();
       });
       row.appendChild(icon('drag_indicator', 'drag-indicator'));
+      var groupNum = tileNumber(t);
+      if (groupNum) row.appendChild(el('span', 'completed-group-row-number', groupNum + '.'));
       row.appendChild(el('span', 'completed-group-row-text', t.title));
       var delBtn = el('button', 'tile-delete');
       delBtn.appendChild(icon('close'));
@@ -685,9 +736,11 @@
     tDot.style.background = project.color;
     titleWrap.appendChild(tDot);
     var titleCol = el('div', 'tile-title-col');
+    var num = tileNumber(t);
+    var labelText = project.name ? (num ? project.name + '  ·  #' + num : project.name) : (num ? '#' + num : '');
 
     if (state.renamingTileId === t.id) {
-      if (project.name) titleCol.appendChild(el('div', 'tile-project-label', project.name));
+      if (labelText) titleCol.appendChild(el('div', 'tile-project-label', labelText));
       var renameInput = el('input', 'dark-input tile-rename-input');
       renameInput.value = state.renameDraftText;
       var commitTileRename = function () {
@@ -707,7 +760,7 @@
       titleCol.appendChild(renameInput);
       setTimeout(function () { renameInput.focus(); renameInput.select(); }, 0);
     } else {
-      if (project.name) titleCol.appendChild(el('div', 'tile-project-label', project.name));
+      if (labelText) titleCol.appendChild(el('div', 'tile-project-label', labelText));
       titleCol.appendChild(el('div', 'tile-title' + (t.status === 'done' ? ' done' : ''), t.title));
       if (total > 0) {
         var progRow = el('div', 'tile-progress-row');

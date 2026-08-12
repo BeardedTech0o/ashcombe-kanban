@@ -5,11 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ashcombe Board</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 <style>
 * { box-sizing: border-box; }
 html, body { height: 100%; }
+html { font-size: 16px; }
+html[data-fontsize="xsmall"] { font-size: 13px; }
+html[data-fontsize="small"] { font-size: 14.5px; }
+html[data-fontsize="medium"] { font-size: 16px; }
+html[data-fontsize="large"] { font-size: 18px; }
+html[data-fontsize="xlarge"] { font-size: 20.5px; }
 body {
   margin: 0;
   background: #14151b;
@@ -21,7 +27,7 @@ body {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
   font-style: normal;
-  font-size: 20px;
+  font-size: 1.25rem;
   line-height: 1;
   letter-spacing: normal;
   text-transform: none;
@@ -61,6 +67,7 @@ input, textarea { font-family: inherit; }
   inset: 0;
   z-index: 30;
 }
+.overlay-catcher.dim { background: rgba(0,0,0,0.45); }
 
 /* Top bar */
 .topbar {
@@ -78,11 +85,27 @@ input, textarea { font-family: inherit; }
 }
 .app-title {
   font-family: 'Space Mono', monospace;
-  font-weight: 600;
-  font-size: 25px;
+  font-weight: 400;
+  font-size: 1.5625rem;
   letter-spacing: 0.02em;
   margin: 0;
 }
+.hamburger-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #eae8ea;
+  cursor: pointer;
+  padding: 0;
+}
+.hamburger-btn:hover { background: rgba(233,232,237,0.08); }
+.hamburger-btn .msi { font-size: 1.25rem; }
 .new-project-wrap { position: relative; }
 .new-project-btn {
   display: flex;
@@ -94,11 +117,11 @@ input, textarea { font-family: inherit; }
   background: transparent;
   color: var(--accent);
   font-family: 'Space Mono', monospace;
-  font-size: 14px;
+  font-size: 0.875rem;
   cursor: pointer;
 }
-.new-project-btn .msi:first-child { font-size: 18px; }
-.new-project-btn .msi:last-child { font-size: 16px; }
+.new-project-btn .msi:first-child { font-size: 1.125rem; }
+.new-project-btn .msi:last-child { font-size: 1rem; }
 
 .menu-panel {
   position: absolute;
@@ -124,17 +147,17 @@ input, textarea { font-family: inherit; }
   background: transparent;
   color: #eae8ea;
   font-family: 'Space Mono', monospace;
-  font-size: 14px;
+  font-size: 0.875rem;
   cursor: pointer;
   text-align: left;
   width: 100%;
 }
 .menu-row:hover { background: rgba(233,232,237,0.07); }
-.menu-row .msi { font-size: 19px; opacity: 0.75; }
+.menu-row .msi { font-size: 1.1875rem; opacity: 0.75; }
 
 .topbar-meta {
   font-family: 'Space Mono', monospace;
-  font-size: 11px;
+  font-size: 0.6875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.45;
@@ -158,11 +181,11 @@ input, textarea { font-family: inherit; }
   padding: 18px 14px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 8px;
 }
 .sidebar-heading {
   font-family: 'Space Mono', monospace;
-  font-size: 10px;
+  font-size: 0.625rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   opacity: 0.4;
@@ -170,20 +193,33 @@ input, textarea { font-family: inherit; }
 }
 .no-projects {
   padding: 8px 10px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-style: italic;
   opacity: 0.4;
 }
-.project-row {
+.project-card {
+  background: #1e2029;
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0 0 0 1px rgba(233,232,237,0.06);
+}
+.project-card:hover { box-shadow: 0 0 0 1px rgba(233,232,237,0.16); }
+.project-card.drag-target { box-shadow: inset 0 0 0 1px rgba(233,232,237,0.25), 0 0 0 1px rgba(233,232,237,0.25); background: rgba(233,232,237,0.06); }
+.project-row-top {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 10px;
-  border-radius: 8px;
   cursor: pointer;
 }
-.project-row:hover { background: rgba(233,232,237,0.06); }
-.project-row.drag-target { background: rgba(233,232,237,0.12); box-shadow: inset 0 0 0 1px rgba(233,232,237,0.25); }
+.project-row-bottom {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(233,232,237,0.08);
+}
+.project-row-spacer { flex: 1; }
 .project-dot {
   width: 8px;
   height: 8px;
@@ -194,10 +230,9 @@ input, textarea { font-family: inherit; }
   flex: 1;
   min-width: 30px;
   font-family: 'Space Mono', monospace;
-  font-size: 15px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 0.9375rem;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 .project-name.done {
   text-decoration: line-through;
@@ -205,11 +240,11 @@ input, textarea { font-family: inherit; }
 }
 .project-count {
   font-family: 'Space Mono', monospace;
-  font-size: 10px;
+  font-size: 0.625rem;
   opacity: 0.45;
 }
 .icon-btn {
-  font-size: 16px;
+  font-size: 1rem;
   opacity: 0.45;
   background: none;
   border: none;
@@ -221,18 +256,20 @@ input, textarea { font-family: inherit; }
 .icon-btn.delete { opacity: 0.35; }
 .icon-btn.delete:hover { color: #c17a6c; }
 .chevron {
-  font-size: 18px;
+  font-size: 1.125rem;
   opacity: 0.5;
   transition: transform 0.15s;
 }
 .chevron.expanded { transform: rotate(90deg); }
 
 .project-tiles {
-  padding-left: 24px;
+  padding-left: 18px;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin: 2px 0 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(233,232,237,0.08);
 }
 .mini-tile {
   display: flex;
@@ -240,7 +277,7 @@ input, textarea { font-family: inherit; }
   gap: 8px;
   padding: 7px 10px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-family: 'Space Mono', monospace;
   cursor: grab;
   opacity: 0.85;
@@ -258,7 +295,7 @@ input, textarea { font-family: inherit; }
   flex: none;
   opacity: 0.5;
   font-family: 'Space Mono', monospace;
-  font-size: 11px;
+  font-size: 0.6875rem;
 }
 .mini-tile-text {
   overflow: hidden;
@@ -284,7 +321,7 @@ input, textarea { font-family: inherit; }
   border: 1px solid rgba(233,232,237,0.16);
   border-radius: 6px;
   padding: 6px 8px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-family: 'Space Mono', monospace;
   color: #eae8ea;
   outline: none;
@@ -296,7 +333,7 @@ input, textarea { font-family: inherit; }
   min-width: 0;
   width: auto;
   padding: 4px 6px;
-  font-size: 15px;
+  font-size: 0.9375rem;
 }
 
 /* Settings */
@@ -323,11 +360,11 @@ input, textarea { font-family: inherit; }
   background: transparent;
   color: #eae8ea;
   font-family: 'Space Mono', monospace;
-  font-size: 14px;
+  font-size: 0.875rem;
   cursor: pointer;
 }
 .settings-btn:hover { background: rgba(233,232,237,0.06); }
-.settings-btn .msi { font-size: 19px; opacity: 0.7; }
+.settings-btn .msi { font-size: 1.1875rem; opacity: 0.7; }
 .archived-btn {
   flex: none;
   padding: 9px 10px;
@@ -336,7 +373,7 @@ input, textarea { font-family: inherit; }
   background: transparent;
   color: #eae8ea;
   font-family: 'Space Mono', monospace;
-  font-size: 13px;
+  font-size: 0.8125rem;
   opacity: 0.6;
   cursor: pointer;
 }
@@ -349,7 +386,7 @@ input, textarea { font-family: inherit; }
   gap: 10px;
   padding: 7px 4px;
 }
-.archived-row .project-name { font-size: 14px; }
+.archived-row .project-name { font-size: 0.875rem; }
 .unarchive-btn {
   flex: none;
   padding: 5px 10px;
@@ -357,7 +394,7 @@ input, textarea { font-family: inherit; }
   border: 1px solid rgba(233,232,237,0.16);
   background: transparent;
   color: #eae8ea;
-  font-size: 11px;
+  font-size: 0.6875rem;
   cursor: pointer;
   opacity: 0.75;
 }
@@ -376,7 +413,7 @@ input, textarea { font-family: inherit; }
 }
 .settings-label {
   font-family: 'Space Mono', monospace;
-  font-size: 10px;
+  font-size: 0.625rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   opacity: 0.45;
@@ -394,7 +431,25 @@ input, textarea { font-family: inherit; }
   justify-content: center;
   padding: 0;
 }
-.theme-swatch .msi { font-size: 15px; color: #14151b; }
+.theme-swatch .msi { font-size: 0.9375rem; color: #14151b; }
+.fontsize-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.fontsize-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(233,232,237,0.16);
+  background: transparent;
+  color: #eae8ea;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+  opacity: 0.7;
+}
+.fontsize-btn:hover { opacity: 1; }
+.fontsize-btn.active {
+  opacity: 1;
+  border-color: var(--accent);
+  color: var(--accent);
+}
 .clear-board-btn {
   width: 100%;
   padding: 8px;
@@ -402,7 +457,7 @@ input, textarea { font-family: inherit; }
   border: 1px solid rgba(233,232,237,0.16);
   background: transparent;
   color: #eae8ea;
-  font-size: 13px;
+  font-size: 0.8125rem;
   cursor: pointer;
   opacity: 0.7;
 }
@@ -436,13 +491,13 @@ input, textarea { font-family: inherit; }
 }
 .column-label {
   font-family: 'Space Mono', monospace;
-  font-weight: 600;
-  font-size: 17px;
+  font-weight: 400;
+  font-size: 1.0625rem;
   letter-spacing: 0.01em;
 }
 .column-count {
   font-family: 'Space Mono', monospace;
-  font-size: 11px;
+  font-size: 0.6875rem;
   opacity: 0.4;
 }
 .column-body {
@@ -467,8 +522,8 @@ input, textarea { font-family: inherit; }
 .completed-group-name {
   flex: 1;
   font-family: 'Space Mono', monospace;
-  font-weight: 600;
-  font-size: 15px;
+  font-weight: 400;
+  font-size: 0.9375rem;
   text-decoration: line-through;
   opacity: 0.65;
 }
@@ -482,7 +537,7 @@ input, textarea { font-family: inherit; }
 }
 .completed-group-sub {
   font-family: 'Space Mono', monospace;
-  font-size: 10px;
+  font-size: 0.625rem;
   opacity: 0.4;
   margin-top: 4px;
 }
@@ -492,21 +547,27 @@ input, textarea { font-family: inherit; }
   gap: 8px;
   cursor: grab;
 }
+.completed-group-row-number {
+  flex: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6875rem;
+  opacity: 0.4;
+}
 .completed-group-row-text {
   flex: 1;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-family: 'Space Mono', monospace;
   text-decoration: line-through;
   opacity: 0.55;
 }
 .tile-rename-input {
-  font-size: 15px;
+  font-size: 0.9375rem;
 }
 .empty-col {
   padding: 30px 6px;
   text-align: center;
   font-family: 'Space Mono', monospace;
-  font-size: 10px;
+  font-size: 0.625rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.25;
@@ -536,7 +597,7 @@ input, textarea { font-family: inherit; }
 .tile-title-col { flex: 1; min-width: 0; }
 .tile-project-label {
   font-family: 'Space Mono', monospace;
-  font-size: 9px;
+  font-size: 0.5625rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.4;
@@ -544,8 +605,8 @@ input, textarea { font-family: inherit; }
 }
 .tile-title {
   font-family: 'Space Mono', monospace;
-  font-size: 17px;
-  font-weight: 600;
+  font-size: 1.0625rem;
+  font-weight: 400;
   line-height: 1.25;
 }
 .tile-title.done {
@@ -568,14 +629,14 @@ input, textarea { font-family: inherit; }
 .tile-progress-fill { height: 100%; }
 .tile-progress-label {
   font-family: 'Space Mono', monospace;
-  font-size: 10px;
+  font-size: 0.625rem;
   opacity: 0.5;
   flex: none;
 }
-.drag-indicator { font-size: 16px; opacity: 0.3; cursor: grab; }
-.tile-delete { font-size: 16px; opacity: 0.3; background: none; border: none; color: #eae8ea; cursor: pointer; padding: 0; }
+.drag-indicator { font-size: 1rem; opacity: 0.3; cursor: grab; }
+.tile-delete { font-size: 1rem; opacity: 0.3; background: none; border: none; color: #eae8ea; cursor: pointer; padding: 0; }
 .tile-delete:hover { opacity: 0.9; color: #c17a6c; }
-.tile-edit { font-size: 16px; opacity: 0.3; background: none; border: none; color: #eae8ea; cursor: pointer; padding: 0; }
+.tile-edit { font-size: 1rem; opacity: 0.3; background: none; border: none; color: #eae8ea; cursor: pointer; padding: 0; }
 .tile-edit:hover { opacity: 0.85; }
 
 .tile-subtasks {
@@ -588,9 +649,9 @@ input, textarea { font-family: inherit; }
 }
 .subtask-row { display: flex; align-items: center; gap: 8px; }
 .subtask-row input[type="checkbox"] { width: 14px; height: 14px; cursor: pointer; flex: none; }
-.subtask-text { flex: 1; font-size: 13px; font-family: 'Space Mono', monospace; }
+.subtask-text { flex: 1; font-size: 0.8125rem; font-family: 'Space Mono', monospace; }
 .subtask-text.done { text-decoration: line-through; opacity: 0.45; }
-.subtask-delete { font-size: 14px; opacity: 0.25; background: none; border: none; color: #eae8ea; cursor: pointer; padding: 0; }
+.subtask-delete { font-size: 0.875rem; opacity: 0.25; background: none; border: none; color: #eae8ea; cursor: pointer; padding: 0; }
 .subtask-delete:hover { opacity: 0.8; }
 .add-subtask-row { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
 .add-subtask-input {
@@ -599,12 +660,12 @@ input, textarea { font-family: inherit; }
   border: 1px solid rgba(233,232,237,0.14);
   border-radius: 6px;
   padding: 5px 8px;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-family: 'Space Mono', monospace;
   color: #eae8ea;
   outline: none;
 }
-.add-subtask-btn { font-size: 16px; background: none; border: none; cursor: pointer; }
+.add-subtask-btn { font-size: 1rem; background: none; border: none; cursor: pointer; }
 
 /* Modals */
 .modal-backdrop {
@@ -637,8 +698,8 @@ input, textarea { font-family: inherit; }
 }
 .modal-title {
   font-family: 'Space Mono', monospace;
-  font-weight: 600;
-  font-size: 24px;
+  font-weight: 400;
+  font-size: 1.5rem;
   margin: 0;
 }
 .modal-close {
@@ -647,7 +708,7 @@ input, textarea { font-family: inherit; }
   color: #eae8ea;
   opacity: 0.5;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 
 .template-grid {
@@ -665,14 +726,14 @@ input, textarea { font-family: inherit; }
   gap: 6px;
   position: relative;
 }
-.template-name { font-family: 'Space Mono', monospace; font-weight: 600; font-size: 16px; }
-.template-count { font-family: 'Space Mono', monospace; font-size: 10px; opacity: 0.45; }
-.template-preview { font-size: 12px; opacity: 0.6; line-height: 1.4; }
+.template-name { font-family: 'Space Mono', monospace; font-weight: 400; font-size: 1rem; }
+.template-count { font-family: 'Space Mono', monospace; font-size: 0.625rem; opacity: 0.45; }
+.template-preview { font-size: 0.75rem; opacity: 0.6; line-height: 1.4; }
 .template-delete {
   position: absolute;
   top: 8px;
   right: 8px;
-  font-size: 15px;
+  font-size: 0.9375rem;
   background: none;
   border: none;
   color: #eae8ea;
@@ -692,17 +753,17 @@ input, textarea { font-family: inherit; }
   gap: 6px;
   min-height: 96px;
 }
-.add-template-card .msi { font-size: 22px; opacity: 0.6; }
-.add-template-card span:last-child { font-size: 13px; opacity: 0.6; }
+.add-template-card .msi { font-size: 1.375rem; opacity: 0.6; }
+.add-template-card span:last-child { font-size: 0.8125rem; opacity: 0.6; }
 
 .field-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px; }
-.field-label { font-size: 12px; opacity: 0.6; }
+.field-label { font-size: 0.75rem; opacity: 0.6; }
 .field-input {
   background: #232532;
   border: 1px solid rgba(233,232,237,0.16);
   border-radius: 8px;
   padding: 9px 10px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-family: 'Space Mono', monospace;
   color: #eae8ea;
   outline: none;
@@ -723,7 +784,7 @@ input, textarea { font-family: inherit; }
   border: 1px solid rgba(233,232,237,0.14);
   border-radius: 6px;
   padding: 7px 9px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-family: 'Space Mono', monospace;
   color: #eae8ea;
   outline: none;
@@ -733,7 +794,7 @@ input, textarea { font-family: inherit; }
   border: 1px solid rgba(233,232,237,0.14);
   border-radius: 6px;
   padding: 7px 9px;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-family: 'Space Mono', monospace;
   color: #eae8ea;
   outline: none;
@@ -744,7 +805,7 @@ input, textarea { font-family: inherit; }
   position: absolute;
   top: 8px;
   right: 8px;
-  font-size: 15px;
+  font-size: 0.9375rem;
   background: none;
   border: none;
   color: #eae8ea;
@@ -762,10 +823,10 @@ input, textarea { font-family: inherit; }
   border: 1px solid rgba(233,232,237,0.18);
   background: transparent;
   color: #eae8ea;
-  font-size: 13px;
+  font-size: 0.8125rem;
   cursor: pointer;
 }
-.add-tile-row-btn .msi { font-size: 16px; }
+.add-tile-row-btn .msi { font-size: 1rem; }
 
 .modal-footer {
   display: flex;
@@ -779,7 +840,7 @@ input, textarea { font-family: inherit; }
   border: 1px solid rgba(233,232,237,0.16);
   background: transparent;
   color: #eae8ea;
-  font-size: 14px;
+  font-size: 0.875rem;
   cursor: pointer;
 }
 .btn-accent {
@@ -788,7 +849,7 @@ input, textarea { font-family: inherit; }
   border: 1px solid var(--accent);
   background: transparent;
   color: var(--accent);
-  font-size: 14px;
+  font-size: 0.875rem;
   cursor: pointer;
 }
 .btn-accent:disabled, .btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -798,7 +859,7 @@ input, textarea { font-family: inherit; }
   border: 1px solid #c17a6c;
   background: transparent;
   color: #c17a6c;
-  font-size: 14px;
+  font-size: 0.875rem;
   cursor: pointer;
 }
 
@@ -813,10 +874,57 @@ input, textarea { font-family: inherit; }
 }
 
 .preview-list { display: flex; flex-direction: column; gap: 4px; max-height: 140px; overflow-y: auto; }
-.preview-row { font-size: 13px; display: flex; justify-content: space-between; opacity: 0.75; }
-.preview-count { font-family: 'Space Mono', monospace; font-size: 10px; opacity: 0.6; }
+.preview-row { font-size: 0.8125rem; display: flex; justify-content: space-between; opacity: 0.75; }
+.preview-count { font-family: 'Space Mono', monospace; font-size: 0.625rem; opacity: 0.6; }
 
-.confirm-body { font-size: 13px; opacity: 0.7; margin: 0; }
+.confirm-body { font-size: 0.8125rem; opacity: 0.7; margin: 0; }
+
+/* ---------- Responsive / portrait ---------- */
+@media (max-width: 860px) {
+  .hamburger-btn { display: flex; }
+  .topbar-left { gap: 14px; }
+  .topbar { padding: 12px 16px; }
+  .app-title { font-size: 1.25rem; }
+  .topbar-meta { display: none; }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(300px, 82vw);
+    z-index: 45;
+    background: #14151b;
+    transform: translateX(-100%);
+    transition: transform 0.22s ease;
+    box-shadow: 16px 0 40px rgba(0,0,0,0.5);
+  }
+  .sidebar.mobile-open { transform: translateX(0); }
+
+  .board {
+    padding: 14px;
+    gap: 0;
+    scroll-snap-type: x mandatory;
+  }
+  .column {
+    width: calc(100vw - 28px);
+    flex: none;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    margin-right: 14px;
+  }
+  .column:last-child { margin-right: 0; }
+}
+
+@media (max-width: 480px) {
+  .new-project-btn span { display: none; }
+  .new-project-btn { padding: 8px 10px; gap: 4px; }
+  .app-title { font-size: 1.1rem; }
+  .board { padding: 10px; }
+  .column { width: calc(100vw - 20px); margin-right: 10px; }
+  .column-header { padding: 12px 12px 8px; }
+  .tile { padding: 11px 12px; }
+}
 
 </style>
 </head>
@@ -840,6 +948,13 @@ input, textarea { font-family: inherit; }
   };
   var PROJECT_COLORS = ['#9c5a52', '#5f7a5a', '#5d6f96', '#7c6091', '#b08a4e', '#4f8585'];
   var STORAGE_KEY = 'ashcombe-kanban-v1';
+  var FONT_SIZES = [
+    { key: 'xsmall', label: 'X-Small' },
+    { key: 'small', label: 'Small' },
+    { key: 'medium', label: 'Medium' },
+    { key: 'large', label: 'Large' },
+    { key: 'xlarge', label: 'X-Large' },
+  ];
 
   function uid(prefix) {
     return (prefix || 'id') + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -858,6 +973,7 @@ input, textarea { font-family: inherit; }
     tiles: [],
     templates: [],
     theme: 'ink',
+    fontSize: 'medium',
     expandedProjects: {},
     expandedTiles: {},
     newProjectOpen: false,
@@ -878,6 +994,7 @@ input, textarea { font-family: inherit; }
     renamingProjectId: null,
     renameProjectDraftText: '',
     archivedOpen: false,
+    mobileSidebarOpen: false,
   };
 
   function load() {
@@ -889,6 +1006,7 @@ input, textarea { font-family: inherit; }
         state.tiles = data.tiles || [];
         state.templates = (data.templates && data.templates.length) ? data.templates : seedTemplates();
         state.theme = data.theme || 'ink';
+        state.fontSize = data.fontSize || 'medium';
       } else {
         state.templates = seedTemplates();
       }
@@ -904,6 +1022,7 @@ input, textarea { font-family: inherit; }
         tiles: state.tiles,
         templates: state.templates,
         theme: state.theme,
+        fontSize: state.fontSize,
       }));
     } catch (e) {}
   }
@@ -913,14 +1032,16 @@ input, textarea { font-family: inherit; }
     root.innerHTML = '';
     var accent = (THEMES[state.theme] || THEMES.ink).accent;
     root.style.setProperty('--accent', accent);
+    document.documentElement.setAttribute('data-fontsize', state.fontSize);
 
-    var anyOverlayOpen = state.newProjectOpen || state.settingsOpen || state.archivedOpen;
+    var anyOverlayOpen = state.newProjectOpen || state.settingsOpen || state.archivedOpen || state.mobileSidebarOpen;
     if (anyOverlayOpen) {
-      var catcher = el('div', 'overlay-catcher');
+      var catcher = el('div', 'overlay-catcher' + (state.mobileSidebarOpen ? ' dim' : ''));
       catcher.addEventListener('click', function () {
         state.newProjectOpen = false;
         state.settingsOpen = false;
         state.archivedOpen = false;
+        state.mobileSidebarOpen = false;
         render();
       });
       root.appendChild(catcher);
@@ -965,6 +1086,11 @@ input, textarea { font-family: inherit; }
     var pts = state.tiles.filter(function (t) { return t.projectId === projectId; });
     return pts.length > 0 && pts.every(function (t) { return t.status === 'done'; });
   }
+  function tileNumber(t) {
+    var arr = tilesByProject()[t.projectId] || [];
+    var idx = arr.indexOf(t);
+    return idx === -1 ? null : idx + 1;
+  }
   function archiveProject(projectId) {
     var p = projectsById()[projectId];
     if (!p) return;
@@ -991,6 +1117,20 @@ input, textarea { font-family: inherit; }
   function buildTopbar(accent) {
     var bar = el('div', 'topbar');
     var left = el('div', 'topbar-left');
+
+    var hamburger = el('button', 'hamburger-btn');
+    hamburger.appendChild(icon('menu'));
+    hamburger.title = 'Toggle projects';
+    hamburger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      state.mobileSidebarOpen = !state.mobileSidebarOpen;
+      state.newProjectOpen = false;
+      state.settingsOpen = false;
+      state.archivedOpen = false;
+      render();
+    });
+    left.appendChild(hamburger);
+
     left.appendChild(el('h1', 'app-title', 'Ashcombe Board'));
 
     var wrap = el('div', 'new-project-wrap');
@@ -1039,7 +1179,7 @@ input, textarea { font-family: inherit; }
 
   /* ---------- Sidebar ---------- */
   function buildSidebar(accent) {
-    var sidebar = el('div', 'sidebar');
+    var sidebar = el('div', 'sidebar' + (state.mobileSidebarOpen ? ' mobile-open' : ''));
     var list = el('div', 'sidebar-list');
     list.appendChild(el('div', 'sidebar-heading', 'Projects'));
 
@@ -1059,29 +1199,28 @@ input, textarea { font-family: inherit; }
   }
 
   function buildProjectRow(p, tiles) {
-    var wrap = el('div');
-    var row = el('div', 'project-row');
-    row.setAttribute('draggable', 'true');
-    row.addEventListener('dragstart', function (e) {
+    var card = el('div', 'project-card');
+    card.setAttribute('draggable', 'true');
+    card.addEventListener('dragstart', function (e) {
       state.draggingProjectId = p.id;
       state.draggingTileId = null;
       try { e.dataTransfer.setData('text/plain', 'project:' + p.id); e.dataTransfer.effectAllowed = 'move'; } catch (err) {}
     });
-    row.addEventListener('dragend', function () {
+    card.addEventListener('dragend', function () {
       state.draggingProjectId = null;
       render();
     });
-    row.addEventListener('dragenter', function (e) { e.preventDefault(); e.stopPropagation(); });
-    row.addEventListener('dragover', function (e) {
+    card.addEventListener('dragenter', function (e) { e.preventDefault(); e.stopPropagation(); });
+    card.addEventListener('dragover', function (e) {
       e.preventDefault();
       e.stopPropagation();
-      if (state.draggingTileId) row.classList.add('drag-target');
+      if (state.draggingTileId) card.classList.add('drag-target');
     });
-    row.addEventListener('dragleave', function () { row.classList.remove('drag-target'); });
-    row.addEventListener('drop', function (e) {
+    card.addEventListener('dragleave', function () { card.classList.remove('drag-target'); });
+    card.addEventListener('drop', function (e) {
       e.preventDefault();
       e.stopPropagation();
-      row.classList.remove('drag-target');
+      card.classList.remove('drag-target');
       var tileId = state.draggingTileId;
       if (!tileId) return;
       var idx = state.tiles.findIndex(function (t) { return t.id === tileId; });
@@ -1096,10 +1235,13 @@ input, textarea { font-family: inherit; }
       render();
     });
 
+    var done = isProjectDone(p.id);
+    var expanded = !!state.expandedProjects[p.id];
+
+    var topRow = el('div', 'project-row-top');
     var dot = el('span', 'project-dot');
     dot.style.background = p.color;
-    row.appendChild(dot);
-    var done = isProjectDone(p.id);
+    topRow.appendChild(dot);
 
     if (state.renamingProjectId === p.id) {
       var renameInput = el('input', 'dark-input project-rename-input');
@@ -1118,7 +1260,7 @@ input, textarea { font-family: inherit; }
         if (e.key === 'Escape') { state.renamingProjectId = null; render(); }
       });
       renameInput.addEventListener('blur', commitProjectRename);
-      row.appendChild(renameInput);
+      topRow.appendChild(renameInput);
       setTimeout(function () { renameInput.focus(); renameInput.select(); }, 0);
     } else {
       var nameSpan = el('span', 'project-name' + (done ? ' done' : ''), p.name);
@@ -1128,9 +1270,20 @@ input, textarea { font-family: inherit; }
         state.renameProjectDraftText = p.name;
         render();
       });
-      row.appendChild(nameSpan);
+      topRow.appendChild(nameSpan);
     }
-    row.appendChild(el('span', 'project-count', String(tiles.length)));
+
+    var chev = icon('chevron_right', 'chevron' + (expanded ? ' expanded' : ''));
+    topRow.appendChild(chev);
+    topRow.addEventListener('click', function () {
+      state.expandedProjects[p.id] = !state.expandedProjects[p.id];
+      render();
+    });
+    card.appendChild(topRow);
+
+    var bottomRow = el('div', 'project-row-bottom');
+    bottomRow.appendChild(el('span', 'project-count', String(tiles.length)));
+    bottomRow.appendChild(el('span', 'project-row-spacer'));
 
     var addBtn = el('button', 'icon-btn');
     addBtn.appendChild(icon('add'));
@@ -1141,7 +1294,7 @@ input, textarea { font-family: inherit; }
       state.expandedProjects[p.id] = true;
       render();
     });
-    row.appendChild(addBtn);
+    bottomRow.appendChild(addBtn);
 
     var archiveBtn = el('button', 'icon-btn');
     archiveBtn.title = 'Archive project';
@@ -1150,7 +1303,7 @@ input, textarea { font-family: inherit; }
       e.stopPropagation();
       archiveProject(p.id);
     });
-    row.appendChild(archiveBtn);
+    bottomRow.appendChild(archiveBtn);
 
     var delBtn = el('button', 'icon-btn delete');
     delBtn.appendChild(icon('delete'));
@@ -1159,17 +1312,8 @@ input, textarea { font-family: inherit; }
       state.confirmDeleteProject = p.id;
       render();
     });
-    row.appendChild(delBtn);
-
-    var expanded = !!state.expandedProjects[p.id];
-    var chev = icon('chevron_right', 'chevron' + (expanded ? ' expanded' : ''));
-    row.appendChild(chev);
-
-    row.addEventListener('click', function () {
-      state.expandedProjects[p.id] = !state.expandedProjects[p.id];
-      render();
-    });
-    wrap.appendChild(row);
+    bottomRow.appendChild(delBtn);
+    card.appendChild(bottomRow);
 
     if (expanded) {
       var listWrap = el('div', 'project-tiles');
@@ -1242,9 +1386,9 @@ input, textarea { font-family: inherit; }
         listWrap.appendChild(input);
         setTimeout(function () { input.focus(); }, 0);
       }
-      wrap.appendChild(listWrap);
+      card.appendChild(listWrap);
     }
-    return wrap;
+    return card;
   }
 
   function commitAddTileDraft() {
@@ -1335,6 +1479,19 @@ input, textarea { font-family: inherit; }
         row.appendChild(swatch);
       });
       pop.appendChild(row);
+
+      pop.appendChild(el('div', 'settings-label', 'Font Size'));
+      var sizeRow = el('div', 'fontsize-row');
+      FONT_SIZES.forEach(function (fs) {
+        var sizeBtn = el('button', 'fontsize-btn' + (state.fontSize === fs.key ? ' active' : ''), fs.label);
+        sizeBtn.addEventListener('click', function () {
+          state.fontSize = fs.key;
+          persist();
+          render();
+        });
+        sizeRow.appendChild(sizeBtn);
+      });
+      pop.appendChild(sizeRow);
 
       var clearBtn = el('button', 'clear-board-btn', 'Clear Board');
       clearBtn.addEventListener('click', function () {
@@ -1464,6 +1621,8 @@ input, textarea { font-family: inherit; }
         render();
       });
       row.appendChild(icon('drag_indicator', 'drag-indicator'));
+      var groupNum = tileNumber(t);
+      if (groupNum) row.appendChild(el('span', 'completed-group-row-number', groupNum + '.'));
       row.appendChild(el('span', 'completed-group-row-text', t.title));
       var delBtn = el('button', 'tile-delete');
       delBtn.appendChild(icon('close'));
@@ -1510,9 +1669,11 @@ input, textarea { font-family: inherit; }
     tDot.style.background = project.color;
     titleWrap.appendChild(tDot);
     var titleCol = el('div', 'tile-title-col');
+    var num = tileNumber(t);
+    var labelText = project.name ? (num ? project.name + '  ·  #' + num : project.name) : (num ? '#' + num : '');
 
     if (state.renamingTileId === t.id) {
-      if (project.name) titleCol.appendChild(el('div', 'tile-project-label', project.name));
+      if (labelText) titleCol.appendChild(el('div', 'tile-project-label', labelText));
       var renameInput = el('input', 'dark-input tile-rename-input');
       renameInput.value = state.renameDraftText;
       var commitTileRename = function () {
@@ -1532,7 +1693,7 @@ input, textarea { font-family: inherit; }
       titleCol.appendChild(renameInput);
       setTimeout(function () { renameInput.focus(); renameInput.select(); }, 0);
     } else {
-      if (project.name) titleCol.appendChild(el('div', 'tile-project-label', project.name));
+      if (labelText) titleCol.appendChild(el('div', 'tile-project-label', labelText));
       titleCol.appendChild(el('div', 'tile-title' + (t.status === 'done' ? ' done' : ''), t.title));
       if (total > 0) {
         var progRow = el('div', 'tile-progress-row');

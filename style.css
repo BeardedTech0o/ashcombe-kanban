@@ -10,7 +10,7 @@ body {
   margin: 0;
   background: #14151b;
   color: #eae8ea;
-  font-family: 'EB Garamond', serif;
+  font-family: 'Space Mono', monospace;
   overflow: hidden;
 }
 .msi {
@@ -74,7 +74,7 @@ input, textarea { font-family: inherit; }
   gap: 26px;
 }
 .app-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Space Mono', monospace;
   font-weight: 400;
   font-size: 1.5625rem;
   letter-spacing: 0.02em;
@@ -106,7 +106,7 @@ input, textarea { font-family: inherit; }
   border: 1px solid var(--accent);
   background: transparent;
   color: var(--accent);
-  font-family: 'EB Garamond', serif;
+  font-family: 'Space Mono', monospace;
   font-size: 0.875rem;
   cursor: pointer;
 }
@@ -136,7 +136,7 @@ input, textarea { font-family: inherit; }
   border: none;
   background: transparent;
   color: #eae8ea;
-  font-family: 'EB Garamond', serif;
+  font-family: 'Space Mono', monospace;
   font-size: 0.875rem;
   cursor: pointer;
   text-align: left;
@@ -219,7 +219,7 @@ input, textarea { font-family: inherit; }
 .project-name {
   flex: 1;
   min-width: 30px;
-  font-family: 'EB Garamond', serif;
+  font-family: 'Space Mono', monospace;
   font-size: 0.9375rem;
   overflow-wrap: break-word;
   white-space: normal;
@@ -268,7 +268,7 @@ input, textarea { font-family: inherit; }
   padding: 7px 10px;
   border-radius: 6px;
   font-size: 0.8125rem;
-  font-family: 'EB Garamond', serif;
+  font-family: 'Space Mono', monospace;
   cursor: grab;
   opacity: 0.85;
   white-space: nowrap;
@@ -312,7 +312,7 @@ input, textarea { font-family: inherit; }
   border-radius: 6px;
   padding: 6px 8px;
   font-size: 0.8125rem;
-  font-family: 'EB Garamond', serif;
+  font-family: 'Space Mono', monospace;
   color: #eae8ea;
   outline: none;
   width: 100%;
@@ -349,7 +349,7 @@ input, textarea { font-family: inherit; }
   border: none;
   background: transparent;
   color: #eae8ea;
-  font-family: 'EB Garamond', serif;
+  font-family: 'Space Mono', monospace;
   font-size: 0.875rem;
   cursor: pointer;
 }
@@ -362,7 +362,7 @@ input, textarea { font-family: inherit; }
   border: none;
   background: transparent;
   color: #eae8ea;
-  font-family: 'EB Garamond', serif;
+  font-family: 'Space Mono', monospace;
   font-size: 0.8125rem;
   opacity: 0.6;
   cursor: pointer;
@@ -429,7 +429,7 @@ input, textarea { font-family: inherit; }
   border: 1px solid rgba(233,232,237,0.16);
   background: transparent;
   color: #eae8ea;
-  font-family: 'EB Garamond', serif;
+  font-family: 'Space Mono', monospace;
   font-size: 0.75rem;
   cursor: pointer;
   opacity: 0.7;
@@ -480,7 +480,7 @@ input, textarea { font-family: inherit; }
   justify-content: space-between;
 }
 .column-label {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Space Mono', monospace;
   font-weight: 400;
   font-size: 1.0625rem;
   letter-spacing: 0.01em;
@@ -511,7 +511,7 @@ input, textarea { font-family: inherit; }
 }
 .completed-group-name {
   flex: 1;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Space Mono', monospace;
   font-weight: 400;
   font-size: 0.9375rem;
   text-decoration: line-through;
@@ -546,7 +546,7 @@ input, textarea { font-family: inherit; }
 .completed-group-row-text {
   flex: 1;
   font-size: 0.8125rem;
-  font-family: 'EB Garamond', serif;
+  font-family: 'Space Mono', monospace;
   text-decoration: line-through;
   opacity: 0.55;
 }
@@ -594,7 +594,7 @@ input, textarea { font-family: inherit; }
   margin-bottom: 3px;
 }
 .tile-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Space Mono', monospace;
   font-size: 1.0625rem;
   font-weight: 400;
   line-height: 1.25;
@@ -639,7 +639,7 @@ input, textarea { font-family: inherit; }
 }
 .subtask-row { display: flex; align-items: center; gap: 8px; }
 .subtask-row input[type="checkbox"] { width: 14px; height: 14px; cursor: pointer; flex: none; }
-.subtask-text { flex: 1; font-size: 0.8125rem; font-family: 'EB Garamond', serif; }
+.subtask-text { flex: 1; font-size: 0.8125rem; font-family: 'Space Mono', monospace; }
 .subtask-text.done { text-decoration: line-through; opacity: 0.45; }
 .subtask-delete { font-size: 0.875rem; opacity: 0.25; background: none; border: none; color: #eae8ea; cursor: pointer; padding: 0; }
 .subtask-delete:hover { opacity: 0.8; }
@@ -651,7 +651,7 @@ input, textarea { font-family: inherit; }
   border-radius: 6px;
   padding: 5px 8px;
   font-size: 0.75rem;
-  font-family: 'EB Garamond', serif;
+  font-family: 'Space Mono', monospace;
   color: #eae8ea;
   outline: none;
 }
@@ -687,7 +687,7 @@ input, textarea { font-family: inherit; }
   margin-bottom: 18px;
 }
 .modal-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Space Mono', monospace;
   font-weight: 400;
   font-size: 1.5rem;
   margin: 0;
@@ -716,7 +716,7 @@ input, textarea { font-family: inherit; }
   gap: 6px;
   position: relative;
 }
-.template-name { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1rem; }
+.template-name { font-family: 'Space Mono', monospace; font-weight: 400; font-size: 1rem; }
 .template-count { font-family: 'Space Mono', monospace; font-size: 0.625rem; opacity: 0.45; }
 .template-preview { font-size: 0.75rem; opacity: 0.6; line-height: 1.4; }
 .template-delete {
@@ -754,7 +754,7 @@ input, textarea { font-family: inherit; }
   border-radius: 8px;
   padding: 9px 10px;
   font-size: 0.875rem;
-  font-family: 'EB Garamond', serif;
+  font-family: 'Space Mono', monospace;
   color: #eae8ea;
   outline: none;
 }
@@ -775,7 +775,7 @@ input, textarea { font-family: inherit; }
   border-radius: 6px;
   padding: 7px 9px;
   font-size: 0.8125rem;
-  font-family: 'EB Garamond', serif;
+  font-family: 'Space Mono', monospace;
   color: #eae8ea;
   outline: none;
 }

@@ -2,10 +2,10 @@
   'use strict';
 
   var COLUMNS = [
-    { key: 'todo', label: 'To Do' },
-    { key: 'inprogress', label: 'In Progress' },
-    { key: 'signoff', label: 'Awaiting Sign-Off' },
-    { key: 'done', label: 'Completed' },
+    { key: 'todo', label: 'To Do', color: '#3b82f6' },
+    { key: 'inprogress', label: 'In Progress', color: '#f59e0b' },
+    { key: 'signoff', label: 'Awaiting Sign-Off', color: '#ef4444' },
+    { key: 'done', label: 'Completed', color: '#22c55e' },
   ];
   var THEMES = {
     ink: { label: 'Ink', accent: '#9184d9' },
@@ -135,6 +135,18 @@
   function icon(name, extraClass) {
     var s = el('span', 'msi' + (extraClass ? ' ' + extraClass : ''), name);
     return s;
+  }
+  function buildTag(labelText, color) {
+    var chip = el('div', 'tile-tag');
+    chip.style.setProperty('--tag-color', color);
+    chip.appendChild(el('span', 'tile-tag-dot'));
+    chip.appendChild(el('span', 'tile-tag-text', labelText));
+    return chip;
+  }
+  function buildAvatar(name, color) {
+    var avatar = el('span', 'tile-avatar', (name || '?').charAt(0).toUpperCase());
+    avatar.style.background = color;
+    return avatar;
   }
 
   function projectsById() {
@@ -619,7 +631,12 @@
     });
 
     var header = el('div', 'column-header');
-    header.appendChild(el('span', 'column-label', col.label));
+    var headerLeft = el('div', 'column-header-left');
+    var colDot = el('span', 'column-dot');
+    colDot.style.background = col.color;
+    headerLeft.appendChild(colDot);
+    headerLeft.appendChild(el('span', 'column-label', col.label));
+    header.appendChild(headerLeft);
     header.appendChild(el('span', 'column-count', String(colTiles.length)));
     column.appendChild(header);
 
@@ -656,9 +673,7 @@
 
     var head = el('div', 'tile-head');
     var titleWrap = el('div', 'tile-title-wrap');
-    var dot = el('span', 'tile-dot');
-    dot.style.background = project.color;
-    titleWrap.appendChild(dot);
+    titleWrap.appendChild(buildAvatar(project.name, project.color));
     var titleCol = el('div', 'tile-title-col');
     titleCol.appendChild(el('div', 'tile-title done', project.name));
     titleCol.appendChild(el('div', 'completed-group-sub', groupTiles.length + ' completed'));
@@ -732,15 +747,12 @@
 
     var head = el('div', 'tile-head');
     var titleWrap = el('div', 'tile-title-wrap');
-    var tDot = el('span', 'tile-dot');
-    tDot.style.background = project.color;
-    titleWrap.appendChild(tDot);
     var titleCol = el('div', 'tile-title-col');
     var num = tileNumber(t);
     var labelText = project.name ? (num ? project.name + '  ·  #' + num : project.name) : (num ? '#' + num : '');
 
     if (state.renamingTileId === t.id) {
-      if (labelText) titleCol.appendChild(el('div', 'tile-project-label', labelText));
+      if (labelText) titleCol.appendChild(buildTag(labelText, project.color));
       var renameInput = el('input', 'dark-input tile-rename-input');
       renameInput.value = state.renameDraftText;
       var commitTileRename = function () {
@@ -760,9 +772,11 @@
       titleCol.appendChild(renameInput);
       setTimeout(function () { renameInput.focus(); renameInput.select(); }, 0);
     } else {
-      if (labelText) titleCol.appendChild(el('div', 'tile-project-label', labelText));
+      if (labelText) titleCol.appendChild(buildTag(labelText, project.color));
       titleCol.appendChild(el('div', 'tile-title' + (t.status === 'done' ? ' done' : ''), t.title));
       if (total > 0) {
+        var footer = el('div', 'tile-footer');
+        footer.appendChild(buildAvatar(project.name, project.color));
         var progRow = el('div', 'tile-progress-row');
         var track = el('div', 'tile-progress-track');
         var fill = el('div', 'tile-progress-fill');
@@ -771,7 +785,8 @@
         track.appendChild(fill);
         progRow.appendChild(track);
         progRow.appendChild(el('span', 'tile-progress-label', done + '/' + total));
-        titleCol.appendChild(progRow);
+        footer.appendChild(progRow);
+        titleCol.appendChild(footer);
       }
       titleWrap.addEventListener('click', function () {
         state.expandedTiles[t.id] = !state.expandedTiles[t.id];

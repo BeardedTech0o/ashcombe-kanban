@@ -1,4 +1,4 @@
-# Nullboard
+# nullboard
 
 A lightweight, single-page kanban board for organizing projects into tiles with subtask checklists. No build step, no backend — everything runs in the browser and saves to `localStorage`.
 
@@ -11,7 +11,7 @@ git clone https://github.com/BeardedTech0o/ashcombe-kanban.git
 cd ashcombe-kanban
 ```
 
-> The GitHub repo is still named `ashcombe-kanban` (renaming it is a manual step in GitHub Settings — see note below). The app itself is Nullboard.
+> The GitHub repo is still named `ashcombe-kanban` (renaming it is a manual step in GitHub Settings — see note below). The app itself is nullboard.
 
 **Option B — download as a ZIP:**
 

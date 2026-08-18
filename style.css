@@ -31,6 +31,7 @@ html[data-fontsize="xlarge"] { font-size: 20.5px; }
   --border: var(--colour-border-hairline);
   --text: var(--colour-text-primary);
   --text-muted: var(--colour-text-secondary);
+  --font-family-base: 'Google Sans Flex', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   /* not yet defined by design-system tokens - kept as-is, see design-system/README.md "Not decided yet" */
   --surface-2: #f7f8fa;
@@ -47,7 +48,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-family-base);
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
 }
@@ -114,7 +115,7 @@ input, textarea { font-family: inherit; }
   gap: 22px;
 }
 .app-title {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 600;
   font-size: 1.25rem;
   letter-spacing: -0.01em;
@@ -147,7 +148,7 @@ input, textarea { font-family: inherit; }
   border: none;
   background: var(--accent);
   color: #ffffff;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 500;
   font-size: 0.875rem;
   cursor: pointer;
@@ -180,7 +181,7 @@ input, textarea { font-family: inherit; }
   border: none;
   background: transparent;
   color: var(--text);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-size: 0.875rem;
   cursor: pointer;
   text-align: left;
@@ -190,7 +191,7 @@ input, textarea { font-family: inherit; }
 .menu-row .msi { font-size: 1.1875rem; opacity: 0.6; }
 
 .topbar-meta {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -219,7 +220,7 @@ input, textarea { font-family: inherit; }
   gap: 8px;
 }
 .sidebar-heading {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 600;
   font-size: 0.6875rem;
   letter-spacing: 0.08em;
@@ -265,7 +266,7 @@ input, textarea { font-family: inherit; }
 .project-name {
   flex: 1;
   min-width: 30px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 500;
   font-size: 0.875rem;
   overflow-wrap: break-word;
@@ -277,7 +278,7 @@ input, textarea { font-family: inherit; }
   color: var(--text-faint);
 }
 .project-count {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 600;
   font-size: 0.6875rem;
   color: var(--text-faint);
@@ -321,7 +322,7 @@ input, textarea { font-family: inherit; }
   padding: 7px 10px;
   border-radius: 6px;
   font-size: 0.8125rem;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   cursor: grab;
   color: var(--text);
   white-space: nowrap;
@@ -337,7 +338,7 @@ input, textarea { font-family: inherit; }
 .mini-tile-number {
   flex: none;
   color: var(--text-faint);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-size: 0.6875rem;
 }
 .mini-tile-text {
@@ -365,7 +366,7 @@ input, textarea { font-family: inherit; }
   border-radius: var(--radius-control);
   padding: 6px 8px;
   font-size: 0.8125rem;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   color: var(--text);
   outline: none;
   width: 100%;
@@ -403,7 +404,7 @@ input, textarea { font-family: inherit; }
   border: none;
   background: transparent;
   color: var(--text);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 500;
   font-size: 0.875rem;
   cursor: pointer;
@@ -417,7 +418,7 @@ input, textarea { font-family: inherit; }
   border: none;
   background: transparent;
   color: var(--text-muted);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-size: 0.8125rem;
   cursor: pointer;
 }
@@ -456,7 +457,7 @@ input, textarea { font-family: inherit; }
   z-index: 40;
 }
 .settings-label {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 600;
   font-size: 0.6875rem;
   letter-spacing: 0.08em;
@@ -485,7 +486,7 @@ input, textarea { font-family: inherit; }
   border: 1px solid var(--border-strong);
   background: transparent;
   color: var(--text);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-size: 0.75rem;
   cursor: pointer;
   opacity: 0.75;
@@ -550,7 +551,7 @@ input, textarea { font-family: inherit; }
   flex: none;
 }
 .column-label {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 600;
   font-size: 0.8125rem;
   letter-spacing: 0.03em;
@@ -558,7 +559,7 @@ input, textarea { font-family: inherit; }
   color: var(--text);
 }
 .column-count {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 600;
   font-size: 0.6875rem;
   color: var(--text-muted);
@@ -588,7 +589,7 @@ input, textarea { font-family: inherit; }
 }
 .completed-group-name {
   flex: 1;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 500;
   font-size: 0.875rem;
   text-decoration: line-through;
@@ -603,7 +604,7 @@ input, textarea { font-family: inherit; }
   border-top: 1px solid var(--border);
 }
 .completed-group-sub {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-size: 0.6875rem;
   color: var(--text-faint);
   margin-top: 4px;
@@ -616,14 +617,14 @@ input, textarea { font-family: inherit; }
 }
 .completed-group-row-number {
   flex: none;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-size: 0.6875rem;
   color: var(--text-faint);
 }
 .completed-group-row-text {
   flex: 1;
   font-size: 0.8125rem;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   text-decoration: line-through;
   color: var(--text-faint);
 }
@@ -633,7 +634,7 @@ input, textarea { font-family: inherit; }
 .empty-col {
   padding: 30px 6px;
   text-align: center;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 600;
   font-size: 0.6875rem;
   letter-spacing: 0.06em;
@@ -678,7 +679,7 @@ input, textarea { font-family: inherit; }
   flex: none;
 }
 .tile-tag-text {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 600;
   font-size: 0.6875rem;
   letter-spacing: 0.02em;
@@ -688,7 +689,7 @@ input, textarea { font-family: inherit; }
 }
 
 .tile-title {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-size: 0.9375rem;
   font-weight: 600;
   line-height: 1.35;
@@ -714,7 +715,7 @@ input, textarea { font-family: inherit; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 700;
   font-size: 0.625rem;
   color: #ffffff;
@@ -736,7 +737,7 @@ input, textarea { font-family: inherit; }
 }
 .tile-progress-fill { height: 100%; border-radius: var(--radius-progress); }
 .tile-progress-label {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 600;
   font-size: 0.6875rem;
   color: var(--text-muted);
@@ -758,7 +759,7 @@ input, textarea { font-family: inherit; }
 }
 .subtask-row { display: flex; align-items: center; gap: 8px; }
 .subtask-row input[type="checkbox"] { width: 14px; height: 14px; cursor: pointer; flex: none; }
-.subtask-text { flex: 1; font-size: 0.8125rem; font-family: 'Inter', sans-serif; color: var(--text); }
+.subtask-text { flex: 1; font-size: 0.8125rem; font-family: var(--font-family-base); color: var(--text); }
 .subtask-text.done { text-decoration: line-through; color: var(--text-faint); }
 .subtask-delete { font-size: 0.875rem; opacity: 0.35; background: none; border: none; color: var(--text); cursor: pointer; padding: 0; }
 .subtask-delete:hover { opacity: 0.9; color: var(--danger); }
@@ -770,7 +771,7 @@ input, textarea { font-family: inherit; }
   border-radius: var(--radius-control);
   padding: 5px 8px;
   font-size: 0.75rem;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   color: var(--text);
   outline: none;
 }
@@ -807,7 +808,7 @@ input, textarea { font-family: inherit; }
   margin-bottom: 18px;
 }
 .modal-title {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 700;
   font-size: 1.25rem;
   letter-spacing: -0.01em;
@@ -841,8 +842,8 @@ input, textarea { font-family: inherit; }
   position: relative;
 }
 .template-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
-.template-name { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.9375rem; color: var(--text); }
-.template-count { font-family: 'Inter', sans-serif; font-size: 0.6875rem; color: var(--text-faint); }
+.template-name { font-family: var(--font-family-base); font-weight: 600; font-size: 0.9375rem; color: var(--text); }
+.template-count { font-family: var(--font-family-base); font-size: 0.6875rem; color: var(--text-faint); }
 .template-preview { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
 .template-delete {
   position: absolute;
@@ -881,7 +882,7 @@ input, textarea { font-family: inherit; }
   border-radius: var(--radius-control);
   padding: 9px 10px;
   font-size: 0.875rem;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   color: var(--text);
   outline: none;
 }
@@ -904,7 +905,7 @@ input, textarea { font-family: inherit; }
   border-radius: var(--radius-control);
   padding: 7px 9px;
   font-size: 0.8125rem;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   color: var(--text);
   outline: none;
 }
@@ -915,7 +916,7 @@ input, textarea { font-family: inherit; }
   border-radius: var(--radius-control);
   padding: 7px 9px;
   font-size: 0.75rem;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   color: var(--text);
   outline: none;
   min-height: 60px;
@@ -962,7 +963,7 @@ input, textarea { font-family: inherit; }
   border: 1px solid var(--border-strong);
   background: transparent;
   color: var(--text);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 500;
   font-size: 0.875rem;
   cursor: pointer;
@@ -974,7 +975,7 @@ input, textarea { font-family: inherit; }
   border: none;
   background: var(--accent);
   color: #ffffff;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 500;
   font-size: 0.875rem;
   cursor: pointer;
@@ -988,7 +989,7 @@ input, textarea { font-family: inherit; }
   border: 1px solid var(--danger);
   background: transparent;
   color: var(--danger);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-base);
   font-weight: 500;
   font-size: 0.875rem;
   cursor: pointer;
@@ -1008,7 +1009,7 @@ input, textarea { font-family: inherit; }
 
 .preview-list { display: flex; flex-direction: column; gap: 4px; max-height: 140px; overflow-y: auto; }
 .preview-row { font-size: 0.8125rem; display: flex; justify-content: space-between; color: var(--text-muted); }
-.preview-count { font-family: 'Inter', sans-serif; font-size: 0.6875rem; color: var(--text-faint); }
+.preview-count { font-family: var(--font-family-base); font-size: 0.6875rem; color: var(--text-faint); }
 
 .confirm-body { font-size: 0.8125rem; color: var(--text-muted); margin: 0; }
 

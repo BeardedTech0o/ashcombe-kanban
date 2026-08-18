@@ -50,7 +50,7 @@ Double-click `index.html`, or open it from your browser with `File → Open`.
 - **Tiles start unplaced** — every tile you create (blank or from a template) lands in the project's list in the sidebar, numbered in order. Nothing is added to a board column automatically.
 - **Move a tile onto the board** — drag a tile from the sidebar onto a column (**To Do**, **In Progress**, **Awaiting Sign-Off**, **Completed**) when you're ready to work on it. Tiles moved onto the board show which project they belong to, along with their tile number.
 - **Subtasks** — expand a tile on the board to check off subtasks and track progress.
-- **Subtask notes** — click the note icon next to a subtask to add one or more notes to it (press Enter or click **add** after typing each one). The icon shows a count once a subtask has notes, so you can tell at a glance which ones do.
+- **Notes** — expand a tile to add one or more free-text notes directly to it (press Enter or click **add** after typing each one). No subtask required — notes belong to the tile itself. A note-count badge shows on the tile even when it's collapsed, so you can tell at a glance which tiles have notes.
 - **Rename** — double-click a project or tile name to rename it inline.
 - **Archive / delete** — use the icons on a project row to archive or delete it; archived projects are hidden from the sidebar but reachable from the **Archived** button at the bottom.
 - **Themes** — open **Settings** to switch the accent color theme.

@@ -31,7 +31,7 @@
     return [{
       id: 'tpl-example',
       name: 'Example Template',
-      tiles: [{ title: 'Example task', subtasks: ['First subtask', 'Second subtask'] }],
+      tiles: [{ title: 'Example task' }],
     }];
   }
 
@@ -49,7 +49,6 @@
     templateDraft: null,
     createDialog: null,
     settingsOpen: false,
-    newSubtaskDraftByTile: {},
     newNoteDraftByTile: {},
     addTileDraftProjectId: null,
     addTileDraftText: '',
@@ -481,7 +480,7 @@
       render();
       return;
     }
-    state.tiles.push({ id: uid('tile'), projectId: projectId, title: text, status: null, subtasks: [], notes: [] });
+    state.tiles.push({ id: uid('tile'), projectId: projectId, title: text, status: null, notes: [] });
     state.addTileDraftProjectId = null;
     state.addTileDraftText = '';
     persist();
@@ -723,8 +722,6 @@
   }
 
   function buildTile(t, project) {
-    var total = t.subtasks.length;
-    var done = t.subtasks.filter(function (x) { return x.done; }).length;
     var expanded = !!state.expandedTiles[t.id];
 
     var tile = el('div', 'tile' + (state.pulseTileId === t.id ? ' tile-pulse' : ''));
@@ -776,27 +773,13 @@
       if (labelText) titleCol.appendChild(buildTag(labelText, project.color));
       titleCol.appendChild(el('div', 'tile-title' + (t.status === 'done' ? ' done' : ''), t.title));
       var noteCount = (t.notes || []).length;
-      if (total > 0 || noteCount > 0) {
+      if (noteCount > 0) {
         var footer = el('div', 'tile-footer');
-        if (total > 0) {
-          footer.appendChild(buildAvatar(project.name, project.color));
-          var progRow = el('div', 'tile-progress-row');
-          var track = el('div', 'tile-progress-track');
-          var fill = el('div', 'tile-progress-fill');
-          fill.style.width = Math.round((done / total) * 100) + '%';
-          fill.style.background = project.color;
-          track.appendChild(fill);
-          progRow.appendChild(track);
-          progRow.appendChild(el('span', 'tile-progress-label', done + '/' + total));
-          footer.appendChild(progRow);
-        }
-        if (noteCount > 0) {
-          var noteBadge = el('span', 'tile-note-badge');
-          noteBadge.title = noteCount + ' note' + (noteCount === 1 ? '' : 's');
-          noteBadge.appendChild(icon('sticky_note_2'));
-          noteBadge.appendChild(el('span', 'tile-note-badge-count', String(noteCount)));
-          footer.appendChild(noteBadge);
-        }
+        var noteBadge = el('span', 'tile-note-badge');
+        noteBadge.title = noteCount + ' note' + (noteCount === 1 ? '' : 's');
+        noteBadge.appendChild(icon('sticky_note_2'));
+        noteBadge.appendChild(el('span', 'tile-note-badge-count', String(noteCount)));
+        footer.appendChild(noteBadge);
         titleCol.appendChild(footer);
       }
       titleWrap.addEventListener('click', function () {
@@ -837,56 +820,6 @@
     tile.appendChild(head);
 
     if (expanded) {
-      var subWrap = el('div', 'tile-subtasks');
-      t.subtasks.forEach(function (sub) {
-        var row = el('div', 'subtask-row');
-        var cb = document.createElement('input');
-        cb.type = 'checkbox';
-        cb.checked = sub.done;
-        cb.style.accentColor = project.color;
-        cb.addEventListener('change', function () {
-          sub.done = !sub.done;
-          persist();
-          render();
-        });
-        row.appendChild(cb);
-        row.appendChild(el('span', 'subtask-text' + (sub.done ? ' done' : ''), sub.text));
-        var subDel = el('button', 'subtask-delete');
-        subDel.appendChild(icon('close'));
-        subDel.addEventListener('click', function () {
-          t.subtasks = t.subtasks.filter(function (x) { return x.id !== sub.id; });
-          persist();
-          render();
-        });
-        row.appendChild(subDel);
-        subWrap.appendChild(row);
-      });
-
-      var addRow = el('div', 'add-subtask-row');
-      var addInput = el('input', 'add-subtask-input');
-      addInput.placeholder = 'Add subtask…';
-      addInput.value = state.newSubtaskDraftByTile[t.id] || '';
-      addInput.addEventListener('input', function (e) {
-        state.newSubtaskDraftByTile[t.id] = e.target.value;
-      });
-      var doAdd = function () {
-        var text = (state.newSubtaskDraftByTile[t.id] || '').trim();
-        if (!text) return;
-        t.subtasks.push({ id: uid('sub'), text: text, done: false });
-        state.newSubtaskDraftByTile[t.id] = '';
-        persist();
-        render();
-      };
-      addInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') doAdd(); });
-      addRow.appendChild(addInput);
-      var addBtn = el('button', 'add-subtask-btn');
-      addBtn.style.color = project.color;
-      addBtn.appendChild(icon('add'));
-      addBtn.addEventListener('click', doAdd);
-      addRow.appendChild(addBtn);
-      subWrap.appendChild(addRow);
-      tile.appendChild(subWrap);
-
       var notesWrap = el('div', 'tile-notes');
       var notes = t.notes || [];
       notes.forEach(function (note) {
@@ -1014,7 +947,6 @@
         tpl.tiles.forEach(function (x) {
           var row = el('div', 'preview-row');
           row.appendChild(el('span', null, x.title));
-          row.appendChild(el('span', 'preview-count', x.subtasks.length + ' sub'));
           pl.appendChild(row);
         });
         previewWrap.appendChild(pl);
@@ -1051,9 +983,7 @@
       if (tpl) {
         tpl.tiles.forEach(function (row) {
           newTiles.push({
-            id: uid('tile'), projectId: projectId, title: row.title, status: null,
-            subtasks: row.subtasks.map(function (txt) { return { id: uid('sub'), text: txt, done: false }; }),
-            notes: [],
+            id: uid('tile'), projectId: projectId, title: row.title, status: null, notes: [],
           });
         });
       }
@@ -1115,7 +1045,7 @@
       addCard.appendChild(el('span', null, 'Add Template'));
       addCard.addEventListener('click', function () {
         state.templatePickerMode = 'add';
-        state.templateDraft = { name: '', tiles: [{ title: '', subtasksText: '' }] };
+        state.templateDraft = { name: '', tiles: [{ title: '' }] };
         render();
       });
       grid.appendChild(addCard);
@@ -1166,18 +1096,12 @@
       });
       rowEl.appendChild(titleInput);
 
-      var subTextarea = el('textarea', 'template-row-subtasks');
-      subTextarea.placeholder = 'Subtasks, one per line';
-      subTextarea.value = row.subtasksText;
-      subTextarea.addEventListener('input', function (e) { row.subtasksText = e.target.value; });
-      rowEl.appendChild(subTextarea);
-
       if (state.templateDraft.tiles.length > 1) {
         var rmBtn = el('button', 'template-row-remove');
         rmBtn.appendChild(icon('delete'));
         rmBtn.addEventListener('click', function () {
           state.templateDraft.tiles = state.templateDraft.tiles.filter(function (_, i) { return i !== idx; });
-          if (!state.templateDraft.tiles.length) state.templateDraft.tiles = [{ title: '', subtasksText: '' }];
+          if (!state.templateDraft.tiles.length) state.templateDraft.tiles = [{ title: '' }];
           render();
         });
         rowEl.appendChild(rmBtn);
@@ -1190,7 +1114,7 @@
     addTileBtn.appendChild(icon('add'));
     addTileBtn.appendChild(document.createTextNode(' Add Tile'));
     addTileBtn.addEventListener('click', function () {
-      state.templateDraft.tiles.push({ title: '', subtasksText: '' });
+      state.templateDraft.tiles.push({ title: '' });
       render();
     });
     wrap.appendChild(addTileBtn);
@@ -1225,10 +1149,7 @@
     var draft = state.templateDraft;
     if (!draft || !draft.name.trim()) return;
     var tiles = draft.tiles.filter(function (t) { return t.title.trim(); }).map(function (t) {
-      return {
-        title: t.title.trim(),
-        subtasks: t.subtasksText.split('\n').map(function (x) { return x.trim(); }).filter(Boolean),
-      };
+      return { title: t.title.trim() };
     });
     if (!tiles.length) return;
     state.templates.push({ id: uid('tpl'), name: draft.name.trim(), tiles: tiles });

@@ -739,62 +739,11 @@ input, textarea { font-family: inherit; }
   color: #ffffff;
   box-shadow: 0 0 0 2px var(--surface);
 }
-.tile-progress-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  min-width: 0;
-}
-.tile-progress-track {
-  flex: 1;
-  height: 5px;
-  border-radius: var(--radius-progress);
-  background: var(--surface-3);
-  overflow: hidden;
-}
-.tile-progress-fill { height: 100%; border-radius: var(--radius-progress); }
-.tile-progress-label {
-  font-family: var(--font-family-base);
-  font-weight: var(--font-weight-label);
-  font-size: var(--font-size-label);
-  color: var(--text-muted);
-  flex: none;
-}
 .drag-indicator { font-size: 1rem; color: var(--text-faint); cursor: grab; }
 .tile-delete { font-size: 1rem; opacity: 0.45; background: none; border: none; color: var(--text); cursor: pointer; padding: 0; }
 .tile-delete:hover { opacity: 1; color: var(--danger); }
 .tile-edit { font-size: 1rem; opacity: 0.45; background: none; border: none; color: var(--text); cursor: pointer; padding: 0; }
 .tile-edit:hover { opacity: 1; }
-
-.tile-subtasks {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.subtask-row { display: flex; align-items: center; gap: 8px; }
-.subtask-row input[type="checkbox"] { width: 14px; height: 14px; cursor: pointer; flex: none; }
-.subtask-text { flex: 1; font-size: 0.8125rem; font-family: var(--font-family-base); color: var(--text); }
-.subtask-text.done { text-decoration: line-through; color: var(--text-faint); }
-.subtask-delete { font-size: 0.875rem; opacity: 0.35; background: none; border: none; color: var(--text); cursor: pointer; padding: 0; }
-.subtask-delete:hover { opacity: 0.9; color: var(--danger); }
-.add-subtask-row { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
-.add-subtask-input {
-  flex: 1;
-  background: var(--surface-2);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-control);
-  padding: 5px 8px;
-  font-size: 0.75rem;
-  font-family: var(--font-family-base);
-  color: var(--text);
-  outline: none;
-}
-.add-subtask-input:focus { border-color: var(--accent); }
-.add-subtask-btn { font-size: 1rem; background: none; border: none; cursor: pointer; }
 
 .tile-notes {
   margin-top: 10px;
@@ -968,19 +917,6 @@ input, textarea { font-family: inherit; }
   outline: none;
 }
 .template-row-title:focus { border-color: var(--accent); }
-.template-row-subtasks {
-  background: var(--surface);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-control);
-  padding: 7px 9px;
-  font-size: 0.75rem;
-  font-family: var(--font-family-base);
-  color: var(--text);
-  outline: none;
-  min-height: 60px;
-  resize: vertical;
-}
-.template-row-subtasks:focus { border-color: var(--accent); }
 .template-row-remove {
   position: absolute;
   top: 8px;
@@ -1066,8 +1002,7 @@ input, textarea { font-family: inherit; }
 }
 
 .preview-list { display: flex; flex-direction: column; gap: 4px; max-height: 140px; overflow-y: auto; }
-.preview-row { font-size: 0.8125rem; display: flex; justify-content: space-between; color: var(--text-muted); }
-.preview-count { font-family: var(--font-family-base); font-size: var(--font-size-label); color: var(--text-faint); }
+.preview-row { font-size: 0.8125rem; display: flex; color: var(--text-muted); }
 
 .confirm-body { font-size: 0.8125rem; color: var(--text-muted); margin: 0; }
 
@@ -1156,7 +1091,7 @@ input, textarea { font-family: inherit; }
     return [{
       id: 'tpl-example',
       name: 'Example Template',
-      tiles: [{ title: 'Example task', subtasks: ['First subtask', 'Second subtask'] }],
+      tiles: [{ title: 'Example task' }],
     }];
   }
 
@@ -1174,7 +1109,6 @@ input, textarea { font-family: inherit; }
     templateDraft: null,
     createDialog: null,
     settingsOpen: false,
-    newSubtaskDraftByTile: {},
     newNoteDraftByTile: {},
     addTileDraftProjectId: null,
     addTileDraftText: '',
@@ -1606,7 +1540,7 @@ input, textarea { font-family: inherit; }
       render();
       return;
     }
-    state.tiles.push({ id: uid('tile'), projectId: projectId, title: text, status: null, subtasks: [], notes: [] });
+    state.tiles.push({ id: uid('tile'), projectId: projectId, title: text, status: null, notes: [] });
     state.addTileDraftProjectId = null;
     state.addTileDraftText = '';
     persist();
@@ -1848,8 +1782,6 @@ input, textarea { font-family: inherit; }
   }
 
   function buildTile(t, project) {
-    var total = t.subtasks.length;
-    var done = t.subtasks.filter(function (x) { return x.done; }).length;
     var expanded = !!state.expandedTiles[t.id];
 
     var tile = el('div', 'tile' + (state.pulseTileId === t.id ? ' tile-pulse' : ''));
@@ -1901,27 +1833,13 @@ input, textarea { font-family: inherit; }
       if (labelText) titleCol.appendChild(buildTag(labelText, project.color));
       titleCol.appendChild(el('div', 'tile-title' + (t.status === 'done' ? ' done' : ''), t.title));
       var noteCount = (t.notes || []).length;
-      if (total > 0 || noteCount > 0) {
+      if (noteCount > 0) {
         var footer = el('div', 'tile-footer');
-        if (total > 0) {
-          footer.appendChild(buildAvatar(project.name, project.color));
-          var progRow = el('div', 'tile-progress-row');
-          var track = el('div', 'tile-progress-track');
-          var fill = el('div', 'tile-progress-fill');
-          fill.style.width = Math.round((done / total) * 100) + '%';
-          fill.style.background = project.color;
-          track.appendChild(fill);
-          progRow.appendChild(track);
-          progRow.appendChild(el('span', 'tile-progress-label', done + '/' + total));
-          footer.appendChild(progRow);
-        }
-        if (noteCount > 0) {
-          var noteBadge = el('span', 'tile-note-badge');
-          noteBadge.title = noteCount + ' note' + (noteCount === 1 ? '' : 's');
-          noteBadge.appendChild(icon('sticky_note_2'));
-          noteBadge.appendChild(el('span', 'tile-note-badge-count', String(noteCount)));
-          footer.appendChild(noteBadge);
-        }
+        var noteBadge = el('span', 'tile-note-badge');
+        noteBadge.title = noteCount + ' note' + (noteCount === 1 ? '' : 's');
+        noteBadge.appendChild(icon('sticky_note_2'));
+        noteBadge.appendChild(el('span', 'tile-note-badge-count', String(noteCount)));
+        footer.appendChild(noteBadge);
         titleCol.appendChild(footer);
       }
       titleWrap.addEventListener('click', function () {
@@ -1962,56 +1880,6 @@ input, textarea { font-family: inherit; }
     tile.appendChild(head);
 
     if (expanded) {
-      var subWrap = el('div', 'tile-subtasks');
-      t.subtasks.forEach(function (sub) {
-        var row = el('div', 'subtask-row');
-        var cb = document.createElement('input');
-        cb.type = 'checkbox';
-        cb.checked = sub.done;
-        cb.style.accentColor = project.color;
-        cb.addEventListener('change', function () {
-          sub.done = !sub.done;
-          persist();
-          render();
-        });
-        row.appendChild(cb);
-        row.appendChild(el('span', 'subtask-text' + (sub.done ? ' done' : ''), sub.text));
-        var subDel = el('button', 'subtask-delete');
-        subDel.appendChild(icon('close'));
-        subDel.addEventListener('click', function () {
-          t.subtasks = t.subtasks.filter(function (x) { return x.id !== sub.id; });
-          persist();
-          render();
-        });
-        row.appendChild(subDel);
-        subWrap.appendChild(row);
-      });
-
-      var addRow = el('div', 'add-subtask-row');
-      var addInput = el('input', 'add-subtask-input');
-      addInput.placeholder = 'Add subtask…';
-      addInput.value = state.newSubtaskDraftByTile[t.id] || '';
-      addInput.addEventListener('input', function (e) {
-        state.newSubtaskDraftByTile[t.id] = e.target.value;
-      });
-      var doAdd = function () {
-        var text = (state.newSubtaskDraftByTile[t.id] || '').trim();
-        if (!text) return;
-        t.subtasks.push({ id: uid('sub'), text: text, done: false });
-        state.newSubtaskDraftByTile[t.id] = '';
-        persist();
-        render();
-      };
-      addInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') doAdd(); });
-      addRow.appendChild(addInput);
-      var addBtn = el('button', 'add-subtask-btn');
-      addBtn.style.color = project.color;
-      addBtn.appendChild(icon('add'));
-      addBtn.addEventListener('click', doAdd);
-      addRow.appendChild(addBtn);
-      subWrap.appendChild(addRow);
-      tile.appendChild(subWrap);
-
       var notesWrap = el('div', 'tile-notes');
       var notes = t.notes || [];
       notes.forEach(function (note) {
@@ -2139,7 +2007,6 @@ input, textarea { font-family: inherit; }
         tpl.tiles.forEach(function (x) {
           var row = el('div', 'preview-row');
           row.appendChild(el('span', null, x.title));
-          row.appendChild(el('span', 'preview-count', x.subtasks.length + ' sub'));
           pl.appendChild(row);
         });
         previewWrap.appendChild(pl);
@@ -2176,9 +2043,7 @@ input, textarea { font-family: inherit; }
       if (tpl) {
         tpl.tiles.forEach(function (row) {
           newTiles.push({
-            id: uid('tile'), projectId: projectId, title: row.title, status: null,
-            subtasks: row.subtasks.map(function (txt) { return { id: uid('sub'), text: txt, done: false }; }),
-            notes: [],
+            id: uid('tile'), projectId: projectId, title: row.title, status: null, notes: [],
           });
         });
       }
@@ -2240,7 +2105,7 @@ input, textarea { font-family: inherit; }
       addCard.appendChild(el('span', null, 'Add Template'));
       addCard.addEventListener('click', function () {
         state.templatePickerMode = 'add';
-        state.templateDraft = { name: '', tiles: [{ title: '', subtasksText: '' }] };
+        state.templateDraft = { name: '', tiles: [{ title: '' }] };
         render();
       });
       grid.appendChild(addCard);
@@ -2291,18 +2156,12 @@ input, textarea { font-family: inherit; }
       });
       rowEl.appendChild(titleInput);
 
-      var subTextarea = el('textarea', 'template-row-subtasks');
-      subTextarea.placeholder = 'Subtasks, one per line';
-      subTextarea.value = row.subtasksText;
-      subTextarea.addEventListener('input', function (e) { row.subtasksText = e.target.value; });
-      rowEl.appendChild(subTextarea);
-
       if (state.templateDraft.tiles.length > 1) {
         var rmBtn = el('button', 'template-row-remove');
         rmBtn.appendChild(icon('delete'));
         rmBtn.addEventListener('click', function () {
           state.templateDraft.tiles = state.templateDraft.tiles.filter(function (_, i) { return i !== idx; });
-          if (!state.templateDraft.tiles.length) state.templateDraft.tiles = [{ title: '', subtasksText: '' }];
+          if (!state.templateDraft.tiles.length) state.templateDraft.tiles = [{ title: '' }];
           render();
         });
         rowEl.appendChild(rmBtn);
@@ -2315,7 +2174,7 @@ input, textarea { font-family: inherit; }
     addTileBtn.appendChild(icon('add'));
     addTileBtn.appendChild(document.createTextNode(' Add Tile'));
     addTileBtn.addEventListener('click', function () {
-      state.templateDraft.tiles.push({ title: '', subtasksText: '' });
+      state.templateDraft.tiles.push({ title: '' });
       render();
     });
     wrap.appendChild(addTileBtn);
@@ -2350,10 +2209,7 @@ input, textarea { font-family: inherit; }
     var draft = state.templateDraft;
     if (!draft || !draft.name.trim()) return;
     var tiles = draft.tiles.filter(function (t) { return t.title.trim(); }).map(function (t) {
-      return {
-        title: t.title.trim(),
-        subtasks: t.subtasksText.split('\n').map(function (x) { return x.trim(); }).filter(Boolean),
-      };
+      return { title: t.title.trim() };
     });
     if (!tiles.length) return;
     state.templates.push({ id: uid('tpl'), name: draft.name.trim(), tiles: tiles });

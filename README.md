@@ -1,6 +1,6 @@
 # nullboard
 
-A lightweight, single-page kanban board for organizing projects into tiles with subtask checklists. No build step, no backend — everything runs in the browser and saves to `localStorage`.
+A lightweight, single-page kanban board for organizing projects into tiles with notes. No build step, no backend — everything runs in the browser and saves to `localStorage`.
 
 ## Download
 
@@ -46,11 +46,10 @@ Double-click `index.html`, or open it from your browser with `File → Open`.
 ## Using the board
 
 - **Create a project** — click **New Project** in the top bar, then choose **Blank Project** or **Choose From Template**.
-- **Templates** — pick an existing template to prefill a project with tiles and subtasks, or click **Add Template** to define your own (one tile title + a list of subtasks per line).
+- **Templates** — pick an existing template to prefill a project with tiles, or click **Add Template** to define your own (one tile title per line).
 - **Tiles start unplaced** — every tile you create (blank or from a template) lands in the project's list in the sidebar, numbered in order. Nothing is added to a board column automatically.
 - **Move a tile onto the board** — drag a tile from the sidebar onto a column (**To Do**, **In Progress**, **Awaiting Sign-Off**, **Completed**) when you're ready to work on it. Tiles moved onto the board show which project they belong to, along with their tile number.
-- **Subtasks** — expand a tile on the board to check off subtasks and track progress.
-- **Notes** — expand a tile to add one or more free-text notes directly to it (press Enter or click **add** after typing each one). No subtask required — notes belong to the tile itself. A note-count badge shows on the tile even when it's collapsed, so you can tell at a glance which tiles have notes.
+- **Notes** — expand a tile to add one or more free-text notes directly to it (press Enter or click **add** after typing each one). A note-count badge shows on the tile even when it's collapsed, so you can tell at a glance which tiles have notes.
 - **Rename** — double-click a project or tile name to rename it inline.
 - **Archive / delete** — use the icons on a project row to archive or delete it; archived projects are hidden from the sidebar but reachable from the **Archived** button at the bottom.
 - **Themes** — open **Settings** to switch the accent color theme.

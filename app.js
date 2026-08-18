@@ -50,6 +50,8 @@
     createDialog: null,
     settingsOpen: false,
     newSubtaskDraftByTile: {},
+    expandedSubtaskNotes: {},
+    newNoteDraftBySubtask: {},
     addTileDraftProjectId: null,
     addTileDraftText: '',
     confirmDeleteProject: null,
@@ -840,15 +842,77 @@
         });
         row.appendChild(cb);
         row.appendChild(el('span', 'subtask-text' + (sub.done ? ' done' : ''), sub.text));
+
+        var notes = sub.notes || [];
+        var noteToggle = el('button', 'subtask-note-btn' + (notes.length ? ' has-notes' : ''));
+        noteToggle.title = notes.length ? (notes.length + ' note' + (notes.length === 1 ? '' : 's')) : 'Add note';
+        noteToggle.appendChild(icon('sticky_note_2'));
+        if (notes.length) noteToggle.appendChild(el('span', 'subtask-note-count', String(notes.length)));
+        noteToggle.addEventListener('click', function () {
+          state.expandedSubtaskNotes[sub.id] = !state.expandedSubtaskNotes[sub.id];
+          render();
+        });
+        row.appendChild(noteToggle);
+
         var subDel = el('button', 'subtask-delete');
         subDel.appendChild(icon('close'));
         subDel.addEventListener('click', function () {
           t.subtasks = t.subtasks.filter(function (x) { return x.id !== sub.id; });
+          delete state.expandedSubtaskNotes[sub.id];
+          delete state.newNoteDraftBySubtask[sub.id];
           persist();
           render();
         });
         row.appendChild(subDel);
         subWrap.appendChild(row);
+
+        if (state.expandedSubtaskNotes[sub.id]) {
+          var notesWrap = el('div', 'subtask-notes');
+          notes.forEach(function (note) {
+            var noteRow = el('div', 'subtask-note-row');
+            noteRow.appendChild(el('span', 'subtask-note-text', note.text));
+            var noteDel = el('button', 'subtask-note-delete');
+            noteDel.appendChild(icon('close'));
+            noteDel.addEventListener('click', function () {
+              sub.notes = (sub.notes || []).filter(function (n) { return n.id !== note.id; });
+              persist();
+              render();
+            });
+            noteRow.appendChild(noteDel);
+            notesWrap.appendChild(noteRow);
+          });
+
+          var addNoteRow = el('div', 'add-note-row');
+          var addNoteInput = el('input', 'add-note-input');
+          addNoteInput.placeholder = 'Add note…';
+          addNoteInput.value = state.newNoteDraftBySubtask[sub.id] || '';
+          addNoteInput.addEventListener('click', function (e) { e.stopPropagation(); });
+          addNoteInput.addEventListener('input', function (e) {
+            state.newNoteDraftBySubtask[sub.id] = e.target.value;
+          });
+          var doAddNote = function () {
+            var text = (state.newNoteDraftBySubtask[sub.id] || '').trim();
+            if (!text) return;
+            if (!sub.notes) sub.notes = [];
+            sub.notes.push({ id: uid('note'), text: text });
+            state.newNoteDraftBySubtask[sub.id] = '';
+            persist();
+            render();
+          };
+          addNoteInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') doAddNote();
+            e.stopPropagation();
+          });
+          addNoteRow.appendChild(addNoteInput);
+          var addNoteBtn = el('button', 'add-note-btn');
+          addNoteBtn.style.color = project.color;
+          addNoteBtn.appendChild(icon('add'));
+          addNoteBtn.addEventListener('click', doAddNote);
+          addNoteRow.appendChild(addNoteBtn);
+          notesWrap.appendChild(addNoteRow);
+
+          subWrap.appendChild(notesWrap);
+        }
       });
 
       var addRow = el('div', 'add-subtask-row');
@@ -861,7 +925,7 @@
       var doAdd = function () {
         var text = (state.newSubtaskDraftByTile[t.id] || '').trim();
         if (!text) return;
-        t.subtasks.push({ id: uid('sub'), text: text, done: false });
+        t.subtasks.push({ id: uid('sub'), text: text, done: false, notes: [] });
         state.newSubtaskDraftByTile[t.id] = '';
         persist();
         render();
@@ -999,7 +1063,7 @@
         tpl.tiles.forEach(function (row) {
           newTiles.push({
             id: uid('tile'), projectId: projectId, title: row.title, status: null,
-            subtasks: row.subtasks.map(function (txt) { return { id: uid('sub'), text: txt, done: false }; }),
+            subtasks: row.subtasks.map(function (txt) { return { id: uid('sub'), text: txt, done: false, notes: [] }; }),
           });
         });
       }

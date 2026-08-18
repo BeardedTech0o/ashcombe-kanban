@@ -7,15 +7,13 @@ A lightweight, single-page kanban board for organizing projects into tiles with 
 **Option A — clone with git:**
 
 ```bash
-git clone https://github.com/BeardedTech0o/ashcombe-kanban.git
-cd ashcombe-kanban
+git clone https://github.com/BeardedTech0o/nullboard.git
+cd nullboard
 ```
-
-> The GitHub repo is still named `ashcombe-kanban` (renaming it is a manual step in GitHub Settings — see note below). The app itself is nullboard.
 
 **Option B — download as a ZIP:**
 
-1. Go to the [repository page](https://github.com/BeardedTech0o/ashcombe-kanban).
+1. Go to the [repository page](https://github.com/BeardedTech0o/nullboard).
 2. Click **Code → Download ZIP**.
 3. Unzip it anywhere on your computer.
 
@@ -79,4 +77,4 @@ Any modern browser (Chrome, Firefox, Safari, Edge) with `localStorage` and drag-
 
 ## Design system
 
-The visual design is driven by tokens in [`design-system/tokens.json`](design-system/tokens.json) (see [`design-system/README.md`](design-system/README.md) for the full rationale). The task-card family — board tiles, tags, and the progress bar — plus buttons, badges, and inputs across the app now use the locked radius, shadow, and colour tokens, and the typeface is Google Sans Flex throughout. Not yet retro-fitted, per the design system's own open questions: dark mode, the status colours (To Do / In Progress / Awaiting Sign-Off / Completed), the danger colour, and the accent theme picker (which offers four presets, none of them the locked teal) — these need a decision before they're touched.
+The visual design is driven by tokens in [`design-system/tokens.json`](design-system/tokens.json) (see [`design-system/README.md`](design-system/README.md) for the full rationale). The task-card family — board tiles, tags, and the progress bar — plus buttons, badges, and inputs across the app now use the locked radius, shadow, and colour tokens, and the typeface is Google Sans Flex throughout. The locked typography scale is applied where the mapping is unambiguous: the app title and modal titles use the H1 tier, and small metadata text (badge counts, the sidebar "Projects" heading, progress labels, etc.) uses the Label tier. The H2 and Body tiers are defined as CSS variables but not yet applied anywhere — the scale collapses the app's current ~9 body-text sizes down to a single 1rem, and there's no defined mapping for things like task tile titles, project names, or column labels, so applying it there needs a decision (and a visual pass) rather than a guess. Not yet retro-fitted, per the design system's own open questions: dark mode, the status colours (To Do / In Progress / Awaiting Sign-Off / Completed), the danger colour, and the accent theme picker (which offers four presets, none of them the locked teal) — these need a decision before they're touched.

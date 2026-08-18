@@ -42,6 +42,14 @@ html[data-fontsize="xlarge"] { font-size: 20.5px; }
   --text: var(--colour-text-primary);
   --text-muted: var(--colour-text-secondary);
   --font-family-base: 'Google Sans Flex', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-size-h1: 1.25rem;
+  --font-weight-h1: 700;
+  --font-size-h2: 1rem;
+  --font-weight-h2: 700;
+  --font-size-body: 1rem;
+  --font-weight-body: 400;
+  --font-size-label: 0.75rem;
+  --font-weight-label: 600;
 
   /* not yet defined by design-system tokens - kept as-is, see design-system/README.md "Not decided yet" */
   --surface-2: #f7f8fa;
@@ -126,8 +134,8 @@ input, textarea { font-family: inherit; }
 }
 .app-title {
   font-family: var(--font-family-base);
-  font-weight: 600;
-  font-size: 1.25rem;
+  font-weight: var(--font-weight-h1);
+  font-size: var(--font-size-h1);
   letter-spacing: -0.01em;
   margin: 0;
   color: var(--text);
@@ -202,7 +210,7 @@ input, textarea { font-family: inherit; }
 
 .topbar-meta {
   font-family: var(--font-family-base);
-  font-size: 0.75rem;
+  font-size: var(--font-size-label);
   font-weight: 500;
   letter-spacing: 0.02em;
   color: var(--text-faint);
@@ -231,8 +239,8 @@ input, textarea { font-family: inherit; }
 }
 .sidebar-heading {
   font-family: var(--font-family-base);
-  font-weight: 600;
-  font-size: 0.6875rem;
+  font-weight: var(--font-weight-label);
+  font-size: var(--font-size-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-faint);
@@ -289,8 +297,8 @@ input, textarea { font-family: inherit; }
 }
 .project-count {
   font-family: var(--font-family-base);
-  font-weight: 600;
-  font-size: 0.6875rem;
+  font-weight: var(--font-weight-label);
+  font-size: var(--font-size-label);
   color: var(--text-faint);
   background: var(--surface-3);
   padding: 2px 7px;
@@ -349,7 +357,7 @@ input, textarea { font-family: inherit; }
   flex: none;
   color: var(--text-faint);
   font-family: var(--font-family-base);
-  font-size: 0.6875rem;
+  font-size: var(--font-size-label);
 }
 .mini-tile-text {
   overflow: hidden;
@@ -468,8 +476,8 @@ input, textarea { font-family: inherit; }
 }
 .settings-label {
   font-family: var(--font-family-base);
-  font-weight: 600;
-  font-size: 0.6875rem;
+  font-weight: var(--font-weight-label);
+  font-size: var(--font-size-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-faint);
@@ -570,8 +578,8 @@ input, textarea { font-family: inherit; }
 }
 .column-count {
   font-family: var(--font-family-base);
-  font-weight: 600;
-  font-size: 0.6875rem;
+  font-weight: var(--font-weight-label);
+  font-size: var(--font-size-label);
   color: var(--text-muted);
   background: var(--surface-3);
   padding: 2px 8px;
@@ -615,7 +623,7 @@ input, textarea { font-family: inherit; }
 }
 .completed-group-sub {
   font-family: var(--font-family-base);
-  font-size: 0.6875rem;
+  font-size: var(--font-size-label);
   color: var(--text-faint);
   margin-top: 4px;
 }
@@ -628,7 +636,7 @@ input, textarea { font-family: inherit; }
 .completed-group-row-number {
   flex: none;
   font-family: var(--font-family-base);
-  font-size: 0.6875rem;
+  font-size: var(--font-size-label);
   color: var(--text-faint);
 }
 .completed-group-row-text {
@@ -645,8 +653,8 @@ input, textarea { font-family: inherit; }
   padding: 30px 6px;
   text-align: center;
   font-family: var(--font-family-base);
-  font-weight: 600;
-  font-size: 0.6875rem;
+  font-weight: var(--font-weight-label);
+  font-size: var(--font-size-label);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-faint);
@@ -690,8 +698,8 @@ input, textarea { font-family: inherit; }
 }
 .tile-tag-text {
   font-family: var(--font-family-base);
-  font-weight: 600;
-  font-size: 0.6875rem;
+  font-weight: var(--font-weight-label);
+  font-size: var(--font-size-label);
   letter-spacing: 0.02em;
   white-space: nowrap;
   overflow: hidden;
@@ -748,8 +756,8 @@ input, textarea { font-family: inherit; }
 .tile-progress-fill { height: 100%; border-radius: var(--radius-progress); }
 .tile-progress-label {
   font-family: var(--font-family-base);
-  font-weight: 600;
-  font-size: 0.6875rem;
+  font-weight: var(--font-weight-label);
+  font-size: var(--font-size-label);
   color: var(--text-muted);
   flex: none;
 }
@@ -819,8 +827,8 @@ input, textarea { font-family: inherit; }
 }
 .modal-title {
   font-family: var(--font-family-base);
-  font-weight: 700;
-  font-size: 1.25rem;
+  font-weight: var(--font-weight-h1);
+  font-size: var(--font-size-h1);
   letter-spacing: -0.01em;
   margin: 0;
   color: var(--text);
@@ -853,7 +861,7 @@ input, textarea { font-family: inherit; }
 }
 .template-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
 .template-name { font-family: var(--font-family-base); font-weight: 600; font-size: 0.9375rem; color: var(--text); }
-.template-count { font-family: var(--font-family-base); font-size: 0.6875rem; color: var(--text-faint); }
+.template-count { font-family: var(--font-family-base); font-size: var(--font-size-label); color: var(--text-faint); }
 .template-preview { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
 .template-delete {
   position: absolute;
@@ -1019,7 +1027,7 @@ input, textarea { font-family: inherit; }
 
 .preview-list { display: flex; flex-direction: column; gap: 4px; max-height: 140px; overflow-y: auto; }
 .preview-row { font-size: 0.8125rem; display: flex; justify-content: space-between; color: var(--text-muted); }
-.preview-count { font-family: var(--font-family-base); font-size: 0.6875rem; color: var(--text-faint); }
+.preview-count { font-family: var(--font-family-base); font-size: var(--font-size-label); color: var(--text-faint); }
 
 .confirm-body { font-size: 0.8125rem; color: var(--text-muted); margin: 0; }
 

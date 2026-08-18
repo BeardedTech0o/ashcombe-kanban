@@ -210,7 +210,7 @@
     });
     left.appendChild(hamburger);
 
-    left.appendChild(el('h1', 'app-title', 'Ashcombe Board'));
+    left.appendChild(el('h1', 'app-title', 'Nullboard'));
 
     var wrap = el('div', 'new-project-wrap');
     var btn = el('button', 'new-project-btn');

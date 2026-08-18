@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ashcombe Board</title>
+<title>Nullboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
@@ -18,14 +18,34 @@ html[data-fontsize="large"] { font-size: 18px; }
 html[data-fontsize="xlarge"] { font-size: 20.5px; }
 
 :root {
-  --bg: #f4f5f7;
-  --surface: #ffffff;
+  /* design-system/tokens.json v1 (locked) */
+  --colour-surface-base: #e6e9ee;
+  --colour-surface-card: #e6e9ee;
+  --colour-shadow-dark: #ccd0d6;
+  --colour-shadow-light: #ffffff;
+  --colour-text-primary: #3a3f4a;
+  --colour-text-secondary: #767c88;
+  --colour-accent-teal: #2f8a8a;
+  --colour-accent-teal-light: #6fc4c4;
+  --colour-border-hairline: #d3d7dd;
+  --radius-card: 22px;
+  --radius-control: 13px;
+  --radius-badge: 20px;
+  --radius-progress: 6px;
+  --shadow-card-raised: 2px 2px 5px var(--colour-shadow-dark), -2px -2px 5px var(--colour-shadow-light);
+  --shadow-card-inset: inset 1px 1px 2px var(--colour-shadow-dark), inset -1px -1px 2px var(--colour-shadow-light);
+  --shadow-control-raised: 2px 2px 4px var(--colour-shadow-dark), -2px -2px 4px var(--colour-shadow-light);
+
+  --bg: var(--colour-surface-base);
+  --surface: var(--colour-surface-card);
+  --border: var(--colour-border-hairline);
+  --text: var(--colour-text-primary);
+  --text-muted: var(--colour-text-secondary);
+
+  /* not yet defined by design-system tokens - kept as-is, see design-system/README.md "Not decided yet" */
   --surface-2: #f7f8fa;
   --surface-3: #eef0f3;
-  --border: #e6e7eb;
   --border-strong: #d9dbe1;
-  --text: #1b1d24;
-  --text-muted: #6b7080;
   --text-faint: #9a9eac;
   --danger: #e5484d;
   --shadow-sm: 0 1px 2px rgba(20,24,36,0.05), 0 1px 1px rgba(20,24,36,0.03);
@@ -118,7 +138,7 @@ input, textarea { font-family: inherit; }
   width: 34px;
   height: 34px;
   flex: none;
-  border-radius: 8px;
+  border-radius: var(--radius-control);
   border: none;
   background: transparent;
   color: var(--text);
@@ -133,7 +153,7 @@ input, textarea { font-family: inherit; }
   align-items: center;
   gap: 6px;
   padding: 9px 16px;
-  border-radius: 8px;
+  border-radius: var(--radius-control);
   border: none;
   background: var(--accent);
   color: #ffffff;
@@ -141,7 +161,7 @@ input, textarea { font-family: inherit; }
   font-weight: 500;
   font-size: 0.875rem;
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-control-raised);
 }
 .new-project-btn:hover { filter: brightness(1.06); }
 .new-project-btn .msi:first-child { font-size: 1.125rem; }
@@ -166,7 +186,7 @@ input, textarea { font-family: inherit; }
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-control);
   border: none;
   background: transparent;
   color: var(--text);
@@ -273,7 +293,7 @@ input, textarea { font-family: inherit; }
   color: var(--text-faint);
   background: var(--surface-3);
   padding: 2px 7px;
-  border-radius: 999px;
+  border-radius: var(--radius-badge);
 }
 .icon-btn {
   font-size: 1rem;
@@ -352,7 +372,7 @@ input, textarea { font-family: inherit; }
 .dark-input {
   background: var(--surface);
   border: 1px solid var(--border-strong);
-  border-radius: 6px;
+  border-radius: var(--radius-control);
   padding: 6px 8px;
   font-size: 0.8125rem;
   font-family: 'Inter', sans-serif;
@@ -389,7 +409,7 @@ input, textarea { font-family: inherit; }
   flex: 1;
   min-width: 0;
   padding: 9px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius-control);
   border: none;
   background: transparent;
   color: var(--text);
@@ -403,7 +423,7 @@ input, textarea { font-family: inherit; }
 .archived-btn {
   flex: none;
   padding: 9px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius-control);
   border: none;
   background: transparent;
   color: var(--text-muted);
@@ -424,7 +444,7 @@ input, textarea { font-family: inherit; }
 .unarchive-btn {
   flex: none;
   padding: 5px 10px;
-  border-radius: 6px;
+  border-radius: var(--radius-control);
   border: 1px solid var(--border-strong);
   background: transparent;
   color: var(--text);
@@ -471,7 +491,7 @@ input, textarea { font-family: inherit; }
 .fontsize-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 .fontsize-btn {
   padding: 6px 10px;
-  border-radius: 6px;
+  border-radius: var(--radius-control);
   border: 1px solid var(--border-strong);
   background: transparent;
   color: var(--text);
@@ -490,7 +510,7 @@ input, textarea { font-family: inherit; }
 .clear-board-btn {
   width: 100%;
   padding: 8px;
-  border-radius: 8px;
+  border-radius: var(--radius-control);
   border: 1px solid var(--border-strong);
   background: transparent;
   color: var(--text);
@@ -554,7 +574,7 @@ input, textarea { font-family: inherit; }
   color: var(--text-muted);
   background: var(--surface-3);
   padding: 2px 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-badge);
   flex: none;
 }
 .column-body {
@@ -635,12 +655,12 @@ input, textarea { font-family: inherit; }
 /* Tile */
 .tile {
   background: var(--surface);
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   padding: 14px 15px;
   cursor: grab;
-  box-shadow: var(--shadow-sm), 0 0 0 1px var(--border);
+  box-shadow: var(--shadow-card-raised), 0 0 0 1px var(--border);
 }
-.tile:hover { box-shadow: var(--shadow-md), 0 0 0 1px var(--border-strong); }
+.tile:hover { box-shadow: var(--shadow-card-raised), 0 0 0 1px var(--border-strong); }
 .tile-head {
   display: flex;
   align-items: flex-start;
@@ -654,7 +674,7 @@ input, textarea { font-family: inherit; }
   align-items: center;
   gap: 5px;
   padding: 3px 9px 3px 7px;
-  border-radius: 999px;
+  border-radius: var(--radius-badge);
   background: color-mix(in srgb, var(--tag-color) 14%, white);
   color: color-mix(in srgb, var(--tag-color) 65%, black);
   margin-bottom: 8px;
@@ -720,11 +740,11 @@ input, textarea { font-family: inherit; }
 .tile-progress-track {
   flex: 1;
   height: 5px;
-  border-radius: 3px;
+  border-radius: var(--radius-progress);
   background: var(--surface-3);
   overflow: hidden;
 }
-.tile-progress-fill { height: 100%; border-radius: 3px; }
+.tile-progress-fill { height: 100%; border-radius: var(--radius-progress); }
 .tile-progress-label {
   font-family: 'Inter', sans-serif;
   font-weight: 600;
@@ -757,7 +777,7 @@ input, textarea { font-family: inherit; }
   flex: 1;
   background: var(--surface-2);
   border: 1px solid var(--border-strong);
-  border-radius: 6px;
+  border-radius: var(--radius-control);
   padding: 5px 8px;
   font-size: 0.75rem;
   font-family: 'Inter', sans-serif;
@@ -868,7 +888,7 @@ input, textarea { font-family: inherit; }
 .field-input {
   background: var(--surface-2);
   border: 1px solid var(--border-strong);
-  border-radius: 8px;
+  border-radius: var(--radius-control);
   padding: 9px 10px;
   font-size: 0.875rem;
   font-family: 'Inter', sans-serif;
@@ -891,7 +911,7 @@ input, textarea { font-family: inherit; }
 .template-row-title {
   background: var(--surface);
   border: 1px solid var(--border-strong);
-  border-radius: 6px;
+  border-radius: var(--radius-control);
   padding: 7px 9px;
   font-size: 0.8125rem;
   font-family: 'Inter', sans-serif;
@@ -902,7 +922,7 @@ input, textarea { font-family: inherit; }
 .template-row-subtasks {
   background: var(--surface);
   border: 1px solid var(--border-strong);
-  border-radius: 6px;
+  border-radius: var(--radius-control);
   padding: 7px 9px;
   font-size: 0.75rem;
   font-family: 'Inter', sans-serif;
@@ -930,7 +950,7 @@ input, textarea { font-family: inherit; }
   align-items: center;
   gap: 6px;
   padding: 7px 12px;
-  border-radius: 7px;
+  border-radius: var(--radius-control);
   border: 1px solid var(--border-strong);
   background: transparent;
   color: var(--text);
@@ -948,7 +968,7 @@ input, textarea { font-family: inherit; }
 }
 .btn-outline {
   padding: 9px 16px;
-  border-radius: 8px;
+  border-radius: var(--radius-control);
   border: 1px solid var(--border-strong);
   background: transparent;
   color: var(--text);
@@ -960,7 +980,7 @@ input, textarea { font-family: inherit; }
 .btn-outline:hover { background: var(--surface-3); }
 .btn-accent {
   padding: 9px 18px;
-  border-radius: 8px;
+  border-radius: var(--radius-control);
   border: none;
   background: var(--accent);
   color: #ffffff;
@@ -968,13 +988,13 @@ input, textarea { font-family: inherit; }
   font-weight: 500;
   font-size: 0.875rem;
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-control-raised);
 }
 .btn-accent:hover:not(:disabled) { filter: brightness(1.06); }
 .btn-accent:disabled, .btn-outline:disabled { opacity: 0.45; cursor: not-allowed; }
 .btn-danger-outline {
   padding: 9px 18px;
-  border-radius: 8px;
+  border-radius: var(--radius-control);
   border: 1px solid var(--danger);
   background: transparent;
   color: var(--danger);
@@ -1266,7 +1286,7 @@ input, textarea { font-family: inherit; }
     });
     left.appendChild(hamburger);
 
-    left.appendChild(el('h1', 'app-title', 'Ashcombe Board'));
+    left.appendChild(el('h1', 'app-title', 'Nullboard'));
 
     var wrap = el('div', 'new-project-wrap');
     var btn = el('button', 'new-project-btn');

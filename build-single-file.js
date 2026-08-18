@@ -20,6 +20,6 @@ html = html.replace(
   '<script>\n' + js + '\n</script>'
 );
 
-var outPath = path.join(dir, 'ashcombe-kanban.single.html');
+var outPath = path.join(dir, 'nullboard.single.html');
 fs.writeFileSync(outPath, html);
 console.log('Wrote ' + outPath);

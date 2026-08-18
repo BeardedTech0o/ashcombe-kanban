@@ -1,4 +1,4 @@
-# Ashcombe Board
+# Nullboard
 
 A lightweight, single-page kanban board for organizing projects into tiles with subtask checklists. No build step, no backend — everything runs in the browser and saves to `localStorage`.
 
@@ -11,6 +11,8 @@ git clone https://github.com/BeardedTech0o/ashcombe-kanban.git
 cd ashcombe-kanban
 ```
 
+> The GitHub repo is still named `ashcombe-kanban` (renaming it is a manual step in GitHub Settings — see note below). The app itself is Nullboard.
+
 **Option B — download as a ZIP:**
 
 1. Go to the [repository page](https://github.com/BeardedTech0o/ashcombe-kanban).
@@ -19,11 +21,11 @@ cd ashcombe-kanban
 
 **Option C — single file, no folder:**
 
-If you'd rather keep just one file on your desktop instead of a folder of three, download [`ashcombe-kanban.single.html`](ashcombe-kanban.single.html) from the repo (open it and click **Download raw file**) and open that directly. It's the same app with the CSS and JS bundled inline.
+If you'd rather keep just one file on your desktop instead of a folder of three, download [`nullboard.single.html`](nullboard.single.html) from the repo (open it and click **Download raw file**) and open that directly. It's the same app with the CSS and JS bundled inline.
 
 ## Running it
 
-The app is three static files (`index.html`, `app.js`, `style.css`) with no dependencies to install — or one bundled file (`ashcombe-kanban.single.html`, see Option C above). Just serve the folder and open it in a browser — opening `index.html` (or the single-file bundle) directly via `file://` also works, but a local server avoids any browser restrictions.
+The app is three static files (`index.html`, `app.js`, `style.css`) with no dependencies to install — or one bundled file (`nullboard.single.html`, see Option C above). Just serve the folder and open it in a browser — opening `index.html` (or the single-file bundle) directly via `file://` also works, but a local server avoids any browser restrictions.
 
 **Using Python (already installed on most systems):**
 
@@ -68,9 +70,13 @@ On narrower screens (phones, portrait tablets) the layout adapts automatically:
 Your board data is saved in your browser's `localStorage`, keyed to the exact URL/file path you open the app from — not stored inside the files themselves. To update:
 
 - **Git clone / folder setup:** `git pull`, then reload the page from the same URL/path you've been using. Data carries over automatically since the origin doesn't change.
-- **Single-file bundle:** download the latest `ashcombe-kanban.single.html` and **save it over the same file path and filename** you're already using. If you save it to a new location, some browsers treat that as a different origin and won't show your existing board — in that case, copy the `ashcombe-kanban-v1` entry from DevTools → Application → Local Storage on the old file before switching, and paste it in at the new one.
-- To regenerate the single-file bundle yourself from the source files, run `node build-single-file.js` (requires Node.js) — this produces `ashcombe-kanban.single.html`.
+- **Single-file bundle:** download the latest `nullboard.single.html` and **save it over the same file path and filename** you're already using. If you save it to a new location, some browsers treat that as a different origin and won't show your existing board — in that case, copy the `ashcombe-kanban-v1` entry from DevTools → Application → Local Storage on the old file before switching, and paste it in at the new one.
+- To regenerate the single-file bundle yourself from the source files, run `node build-single-file.js` (requires Node.js) — this produces `nullboard.single.html`.
 
 ## Browser support
 
 Any modern browser (Chrome, Firefox, Safari, Edge) with `localStorage` and drag-and-drop support.
+
+## Design system
+
+The visual design is driven by tokens in [`design-system/tokens.json`](design-system/tokens.json) (see [`design-system/README.md`](design-system/README.md) for the full rationale). The task-card family — board tiles, tags, and the progress bar — plus buttons, badges, and inputs across the app now use the locked radius, shadow, and colour tokens. Not yet retro-fitted, per the design system's own open questions: dark mode, the status colours (To Do / In Progress / Awaiting Sign-Off / Completed), the danger colour, and the accent theme picker (which offers four presets, none of them the locked teal) — these need a decision before they're touched.

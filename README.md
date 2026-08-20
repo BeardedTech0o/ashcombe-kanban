@@ -1,9 +1,5 @@
 ![nullboard](nullboard-banner.png)
 
-# nullboard
-
-A lightweight, single-page kanban board for organizing projects into tiles with notes. No build step, no backend. Everything runs in the browser.
-
 ## The Problem
 
 Most kanban tools come with an account wall, a sync service, and a pricing page attached to what's often just three columns and a stack of sticky notes. You don't always need that. Sometimes you want a board that opens in a browser tab, holds your tiles, and gets out of the way.
